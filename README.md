@@ -12,7 +12,9 @@ programmablok) er exact op kunnen aansluiten.
   build-stap, geen frameworks, geen externe requests na de eerste load.
 - `manifest.webmanifest` — PWA-manifest met inline (data-URI) iconen.
 - `sw.js` — service worker: cachet de app bij installatie en werkt
-  daarna cache-first, met een offline-fallback naar `index.html`.
+  daarna netwerk-eerst (altijd de nieuwste versie ophalen zolang er
+  verbinding is), met een cache-fallback naar `index.html` voor de
+  zeldzame keer dat er geen internet is.
 - `README.md` — dit bestand.
 
 ## Deployen op GitHub Pages
@@ -29,9 +31,12 @@ programmablok) er exact op kunnen aansluiten.
    installeren** (of de installatie-banner die Chrome automatisch toont)
    om de PWA op je startscherm te zetten.
 6. Een update van de app is simpelweg de bestanden opnieuw uploaden
-   (`git push`). De service worker haalt bij een nieuwe versie
-   automatisch de nieuwe bestanden op zodra de gebruiker de app opnieuw
-   opent (oude cache wordt bij `activate` opgeruimd).
+   (`git push`). Omdat de service worker netwerk-eerst werkt, zie je een
+   nieuwe versie normaal gesproken meteen bij de eerstvolgende keer dat
+   je de app opent (met internetverbinding) — een handmatige refresh is
+   zelden nodig. Wil je zeker weten dat een oude geïnstalleerde PWA de
+   update pakt, verhoog dan ook `CACHE_NAME` in `sw.js`; dat forceert een
+   opschoning van de oude cache bij `activate`.
 
 Belangrijk: een PWA is alleen installeerbaar via HTTPS. GitHub Pages
 levert dat standaard.

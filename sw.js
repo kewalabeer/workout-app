@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kernkracht-v1';
+const CACHE_NAME = 'kernkracht-v2';
 const CORE_ASSETS = ['./', './index.html', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
@@ -15,21 +15,21 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Netwerk-eerst: de gebruiker heeft altijd internet en wil bij elke deploy meteen de nieuwste
+// versie zien, niet een oude gecachte kopie. De cache dient alleen als terugvaloptie voor de
+// zeldzame keer dat er geen verbinding is, niet als primaire bron.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    fetch(event.request).then((response) => {
+      if (response && response.ok && response.type === 'basic') {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+      }
+      return response;
+    }).catch(() => caches.match(event.request).then((cached) => {
       if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (response && response.ok && response.type === 'basic') {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        }
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') return caches.match('./index.html');
-        return caches.match(event.request);
-      });
-    })
+      if (event.request.mode === 'navigate') return caches.match('./index.html');
+    }))
   );
 });
