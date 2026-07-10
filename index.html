@@ -925,9 +925,12 @@ function escapeXml(s){
 }
 function speakAzure(text, onDone){
   const i = state.instellingen;
-  const cached = azureCache.get(text);
-  if(cached){ enqueueAzure(cached, text, onDone); return; }
   const voice = AZURE_VOICES.find(v=>v.value===i.azureVoice) || AZURE_VOICES[0];
+  // Cache-key bevat de stem: anders speelt "Test stem" na het wisselen van stem alsnog de
+  // eerder opgenomen (oude) stem af, omdat de tekst zelf ongewijzigd is.
+  const cacheKey = voice.value + "::" + text;
+  const cached = azureCache.get(cacheKey);
+  if(cached){ enqueueAzure(cached, text, onDone); return; }
   const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'>${escapeXml(text)}</voice></speak>`;
   const controller = new AbortController();
   const timeout = setTimeout(()=>controller.abort(), 4000);
@@ -946,7 +949,7 @@ function speakAzure(text, onDone){
     return res.blob();
   }).then(blob=>{
     const url = URL.createObjectURL(blob);
-    azureCache.set(text, url);
+    azureCache.set(cacheKey, url);
     enqueueAzure(url, text, onDone);
   }).catch(()=>{
     clearTimeout(timeout);
@@ -979,10 +982,17 @@ function stopAzureQueue(){
     try{ azureAudioEl.pause(); }catch(e){}
   }
 }
+// TTS-engines spreken "10x" uit als de letter x in plaats van "10 keer" — dit normaliseert dat
+// soort schrijftaal-afkortingen naar spreektaal voordat de tekst naar de stem gaat. De zichtbare
+// tekst op het scherm (bijv. in de warming-up-lijst) blijft ongewijzigd, dit raakt alleen spraak.
+function speakableText(text){
+  return text.replace(/(\d+)\s*[xX]\b/g, "$1 keer");
+}
 function speak(text, onDone){
   if(!state.instellingen.spraak){ if(onDone) onDone(); return; }
-  if(azureConfigured()) speakAzure(text, onDone);
-  else speakLocal(text, onDone);
+  const spoken = speakableText(text);
+  if(azureConfigured()) speakAzure(spoken, onDone);
+  else speakLocal(spoken, onDone);
 }
 // Onderbreekt alle spraak meteen — alleen aanroepen bij een bewuste context-wissel
 // (uitleg openen, workout afbreken, naar een ander scherm navigeren), nooit bij een normale
