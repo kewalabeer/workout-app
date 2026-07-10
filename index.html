@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Kernkracht — workout-app</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMmY2ZjRmIi8+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMTAiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMzIgNDIgTDcwIDYyIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTQ2IDUwIEwzOCA3OCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik01OCA1NiBMNzggNzYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNDAgNDYgTDE2IDYwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+PC9zdmc+Cg==">
+<style>
+:root{
+  --bg:#f4f5f7; --card:#ffffff; --card2:#eef0f3; --text:#12161c; --muted:#5b6472; --border:#dfe2e7;
+  --primary:#2f6f4f; --primary-text:#ffffff; --primary-dim:#e5f0ea;
+  --danger:#a8402a; --danger-dim:#f6e4df; --warn:#8a6400; --warn-dim:#f5edd8;
+  --radius:16px; --radius-sm:10px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1216; --card:#1a1f26; --card2:#212832; --text:#e9edf2; --muted:#9aa5b3; --border:#2b323d;
+    --primary:#4f9d76; --primary-text:#06130c; --primary-dim:#183226;
+    --danger:#e0755c; --danger-dim:#3a231d; --warn:#e2b84a; --warn-dim:#3a3115;
+  }
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.45; -webkit-tap-highlight-color:transparent;
+  padding-bottom:calc(16px + var(--safe-bottom));
+}
+h1,h2,h3,p,ul,ol{margin:0 0 12px 0;}
+ul,ol{padding-left:20px;}
+button{font:inherit;}
+input,select{font:inherit;}
+.screen{max-width:520px;margin:0 auto;padding:16px 16px 32px 16px;}
+.app-header{
+  position:sticky;top:0;z-index:5;background:var(--bg);
+  display:flex;align-items:center;gap:8px;padding:14px 16px 6px 16px;max-width:520px;margin:0 auto;
+}
+.app-header h1{font-size:19px;margin:0;flex:1;}
+.icon-btn{
+  min-width:44px;min-height:44px;border:none;background:transparent;color:var(--text);
+  border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;
+}
+.icon-btn:active{background:var(--card2);}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;
+}
+.muted{color:var(--muted);font-size:14px;}
+.small{font-size:13px;}
+.center{text-align:center;}
+.row{display:flex;align-items:center;gap:10px;}
+.row.wrap{flex-wrap:wrap;}
+.space-between{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.stack{display:flex;flex-direction:column;gap:10px;}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:12px 18px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--card2);color:var(--text);font-size:15px;font-weight:600;cursor:pointer;
+}
+.btn:active{opacity:.75;}
+.btn-block{display:flex;width:100%;}
+.btn-primary{background:var(--primary);color:var(--primary-text);border-color:var(--primary);}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--muted);}
+.btn-danger{background:var(--danger-dim);color:var(--danger);border-color:transparent;}
+.btn-sm{min-height:40px;padding:8px 14px;font-size:14px;}
+.btn-huge{min-height:72px;font-size:19px;border-radius:20px;}
+.badge{
+  display:inline-block;padding:3px 10px;border-radius:999px;background:var(--primary-dim);color:var(--primary);
+  font-size:12px;font-weight:700;letter-spacing:.02em;
+}
+.badge.warn{background:var(--warn-dim);color:var(--warn);}
+.badge.danger{background:var(--danger-dim);color:var(--danger);}
+.banner{
+  border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:14px;
+  background:var(--warn-dim);color:var(--warn);border:1px solid transparent;
+}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.field label{font-size:13px;font-weight:600;color:var(--muted);}
+.field input[type=text],.field input[type=number],.field input[type=time],.field input[type=date],.field textarea{
+  min-height:48px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card2);
+  color:var(--text);padding:10px 12px;width:100%;
+}
+.field textarea{min-height:80px;resize:vertical;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0;}
+.switch{position:relative;width:50px;height:30px;flex:none;}
+.switch input{opacity:0;width:100%;height:100%;position:absolute;margin:0;cursor:pointer;}
+.switch .track{position:absolute;inset:0;background:var(--card2);border:1px solid var(--border);border-radius:999px;transition:background .15s;}
+.switch .thumb{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:transform .15s;}
+.switch input:checked + .track{background:var(--primary-dim);border-color:var(--primary);}
+.switch input:checked + .track + .thumb{transform:translateX(20px);background:var(--primary);}
+.daypicker{display:flex;gap:6px;flex-wrap:wrap;}
+.daypicker button{
+  min-width:44px;min-height:44px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--card2);color:var(--text);cursor:pointer;font-size:13px;font-weight:600;
+}
+.daypicker button.active{background:var(--primary);color:var(--primary-text);border-color:var(--primary);}
+.stepper{display:flex;align-items:center;justify-content:center;gap:18px;margin:18px 0;}
+.stepper .val{font-size:44px;font-weight:800;min-width:90px;text-align:center;}
+.stepper .unit{font-size:14px;color:var(--muted);font-weight:500;display:block;margin-top:2px;}
+.stepper button{
+  width:56px;height:56px;border-radius:50%;border:1px solid var(--border);background:var(--card2);
+  color:var(--text);font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.stepper button:active{background:var(--primary-dim);}
+.figure-wrap{
+  background:var(--card2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;
+  padding:10px;margin-bottom:12px;
+}
+.figure-wrap svg{width:100%;max-width:280px;height:auto;display:block;}
+.pose2{opacity:0;}
+.stickfig.animate .pose1{animation:stickA 2.4s steps(1) infinite;}
+.stickfig.animate .pose2{animation:stickB 2.4s steps(1) infinite;}
+@keyframes stickA{0%,54%{opacity:1;}55%,100%{opacity:0;}}
+@keyframes stickB{0%,54%{opacity:0;}55%,100%{opacity:1;}}
+.progress-dots{display:flex;gap:5px;justify-content:center;margin:10px 0 4px 0;flex-wrap:wrap;}
+.progress-dots span{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.progress-dots span.done{background:var(--primary);}
+.progress-dots span.now{background:var(--text);}
+.timer-ring{
+  width:180px;height:180px;border-radius:50%;margin:6px auto 14px auto;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  background:conic-gradient(var(--primary) calc(var(--pct,0)*1%), var(--card2) 0);
+}
+.timer-ring .inner{
+  width:150px;height:150px;border-radius:50%;background:var(--card);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+}
+.timer-ring .time{font-size:34px;font-weight:800;}
+.list-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;
+  border-bottom:1px solid var(--border);cursor:pointer;min-height:48px;
+}
+.list-row:last-child{border-bottom:none;}
+.feedback-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.feedback-grid button{
+  min-height:48px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card2);
+  color:var(--text);font-size:13px;font-weight:600;cursor:pointer;padding:8px 6px;
+}
+.feedback-grid button.active{background:var(--primary);color:var(--primary-text);border-color:var(--primary);}
+.feedback-grid button.active.warn-sel{background:var(--warn);color:#1a1400;border-color:var(--warn);}
+.feedback-grid button.active.danger-sel{background:var(--danger);color:#fff;border-color:var(--danger);}
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;
+  z-index:20;
+}
+.modal{
+  background:var(--card);border-radius:20px 20px 0 0;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;
+  padding:18px 18px calc(24px + var(--safe-bottom)) 18px;
+}
+.modal.centered{border-radius:20px;margin:16px;max-height:80vh;}
+details{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;background:var(--card2);}
+details summary{font-weight:600;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;}
+details summary::-webkit-details-marker{display:none;}
+details[open] summary{margin-bottom:8px;}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:110px;padding-top:10px;}
+.bar-chart .bar{flex:1;background:var(--primary);border-radius:4px 4px 0 0;min-height:3px;position:relative;}
+.bar-chart .bar .lbl{position:absolute;bottom:100%;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);margin-bottom:2px;}
+.tabbar{display:flex;gap:6px;margin-bottom:14px;background:var(--card2);border-radius:var(--radius-sm);padding:4px;}
+.tabbar button{flex:1;min-height:40px;border:none;background:transparent;border-radius:8px;color:var(--muted);font-weight:600;font-size:14px;cursor:pointer;}
+.tabbar button.active{background:var(--card);color:var(--text);}
+.copybox{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;
+  font-size:13px;white-space:pre-wrap;max-height:260px;overflow-y:auto;margin-bottom:10px;
+}
+a{color:var(--primary);}
+.fine{font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ===================== DATA: programma blok 1 ===================== */
+const OEFENINGEN = [
+  {
+    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", animatie:"curlup",
+    niveaus:[
+      {n:1,naam:"Basis",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
+      {n:2,naam:"Ellebogen los van de vloer",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
+      {n:3,naam:"Verdiept",doelType:"holds",min:5,max:8,holdSec:10,perKant:false}
+    ],
+    uitleg:{
+      kort:"Til alleen hoofd en schouders een paar centimeter op, de onderrug beweegt niet.",
+      uitvoering:[
+        "Lig op je rug, één been gestrekt, één knie gebogen.",
+        "Leg je handen met de handpalmen onder de holte van je onderrug.",
+        "Til hoofd en schouders een paar centimeter van de vloer zonder je rug te bewegen.",
+        "Houd 8 tellen vast en blijf doorademen.",
+        "Zak rustig terug.",
+        "Wissel halverwege de set van been."
+      ],
+      fouten:["Te hoog komen (dit is geen sit-up)","Kin naar de borst trekken","De onderrug plat in de vloer drukken"],
+      spieren:["Rechte en schuine buikspieren","zonder belasting van de rugwervels"],
+      stoppen:"Bij pijn in rug of nek."
+    }
+  },
+  {
+    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", animatie:"sideplank",
+    niveaus:[
+      {n:1,naam:"Vanaf de knieën",doelType:"seconden",min:10,max:20,perKant:true},
+      {n:2,naam:"Vanaf de knieën, langer",doelType:"seconden",min:20,max:35,perKant:true},
+      {n:3,naam:"Op voeten",doelType:"seconden",min:15,max:25,perKant:true},
+      {n:4,naam:"Op voeten, langer of met bovenste been geheven",doelType:"seconden",min:30,max:45,perKant:true}
+    ],
+    uitleg:{
+      kort:"Lichaam één rechte lijn op je zij, steunend op elleboog.",
+      uitvoering:[
+        "Lig op je zij met je elleboog recht onder je schouder.",
+        "Span je buik en billen aan en til je heup op tot je lichaam een rechte lijn vormt (niveau 1: vanaf de knieën).",
+        "Houd vast en adem door.",
+        "Zak rustig terug en wissel van kant."
+      ],
+      fouten:["Heup laten zakken","Schouder naar je oor optrekken","Naar voren of achteren kantelen"],
+      spieren:["Schuine buikspieren","diepe rompspieren aan de zijkant","schouderstabilisatoren"],
+      stoppen:"Bij schouderpijn, of wanneer je de rechte lijn niet meer kunt houden."
+    }
+  },
+  {
+    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", animatie:"birddog",
+    niveaus:[
+      {n:1,naam:"Alleen arm óf been strekken",doelType:"reps",min:6,max:10,holdSec:null,perKant:true},
+      {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:5,max:8,holdSec:3,perKant:true},
+      {n:3,naam:"Langere hold en elleboog-knie aanraking",doelType:"reps",min:6,max:10,holdSec:5,perKant:true}
+    ],
+    uitleg:{
+      kort:"Op handen en knieën, strek arm en tegengesteld been zonder dat je romp beweegt.",
+      uitvoering:[
+        "Handen onder je schouders, knieën onder je heupen.",
+        "Span je buik licht aan.",
+        "Strek één arm en het tegengestelde been tot horizontaal.",
+        "Houd je rug stil en je bekken recht, alsof er een glas water op je onderrug staat.",
+        "Houd 3 tellen vast en kom rustig terug.",
+        "Wissel van kant."
+      ],
+      fouten:["Doorzakken in de onderrug","Heup laten meedraaien","Arm of been hoger dan de romp tillen"],
+      spieren:["Rugstrekkers","bilspieren","diepe core"],
+      stoppen:"Bij rugpijn."
+    }
+  },
+  {
+    id:"squat", naam:"Squat", patroon:"squat", animatie:"squat",
+    niveaus:[
+      {n:1,naam:"Box squat naar stoel",doelType:"reps",min:8,max:12,perKant:false},
+      {n:2,naam:"Vrije squat tot dijen horizontaal",doelType:"reps",min:8,max:12,perKant:false},
+      {n:3,naam:"Met 3s pauze onderin",doelType:"reps",min:8,max:10,holdSec:3,perKant:false},
+      {n:4,naam:"Split squat",doelType:"reps",min:6,max:10,perKant:true}
+    ],
+    uitleg:{
+      kort:"Zak gecontroleerd alsof je gaat zitten en kom op kracht omhoog.",
+      uitvoering:[
+        "Voeten op schouderbreedte, tenen iets naar buiten.",
+        "Zak rustig naar beneden alsof je op een stoel gaat zitten (niveau 1: raak de stoel licht aan).",
+        "Knieën in lijn met je tenen, hakken op de vloer, borst open.",
+        "Kom vanuit je benen omhoog."
+      ],
+      fouten:["Knieën naar binnen laten vallen","Hakken van de vloer","Rug bol maken onderin"],
+      spieren:["Bovenbenen","bilspieren","core"],
+      stoppen:"Bij kniepijn die tijdens de set toeneemt."
+    }
+  },
+  {
+    id:"pushup", naam:"Push-up progressie", patroon:"push", animatie:"pushup",
+    niveaus:[
+      {n:1,naam:"Tegen de muur",doelType:"reps",min:8,max:12,perKant:false},
+      {n:2,naam:"Handen op aanrecht of tafel",doelType:"reps",min:8,max:12,perKant:false},
+      {n:3,naam:"Op de knieën",doelType:"reps",min:6,max:10,perKant:false},
+      {n:4,naam:"Volledige push-up",doelType:"reps",min:5,max:10,perKant:false}
+    ],
+    uitleg:{
+      kort:"Lichaam één rechte lijn, zak tot je ellebogen negentig graden maken en duw op.",
+      uitvoering:[
+        "Plaats je handen iets breder dan schouderbreedte (niveau 1: tegen de muur; niveau 2: op het aanrecht).",
+        "Maak je lichaam één rechte lijn van hoofd tot hakken (of knieën).",
+        "Zak gecontroleerd tot je ellebogen ongeveer negentig graden maken, ellebogen schuin langs je lichaam.",
+        "Duw jezelf terug omhoog."
+      ],
+      fouten:["Heupen laten doorzakken","Ellebogen wijd naar buiten","Halve herhalingen"],
+      spieren:["Borst","triceps","schouders","core"],
+      stoppen:"Bij schouder- of polspijn."
+    }
+  },
+  {
+    id:"row", naam:"Row progressie", patroon:"pull", animatie:"row",
+    niveaus:[
+      {n:1,naam:"Table row, knieën gebogen",doelType:"reps",min:8,max:12,perKant:false},
+      {n:2,naam:"Towel row aan deurklinken",doelType:"reps",min:8,max:12,perKant:false},
+      {n:3,naam:"Table row gestrekte benen of towel row dieper",doelType:"reps",min:8,max:12,perKant:false}
+    ],
+    uitleg:{
+      kort:"Hang achterover en trek je borst naar de tafel of deur, schouderbladen naar elkaar.",
+      uitvoering:[
+        "Table row: ga onder een stevige tafel liggen en pak de rand vast.",
+        "Trek je borst naar de tafelrand en knijp je schouderbladen naar elkaar.",
+        "Zak gecontroleerd terug.",
+        "Towel row: sla een stevige handdoek om beide klinken van een geopende deur, zet je voeten bij de deur en hang met gestrekte armen achterover.",
+        "Trek je borst naar de deur.",
+        "Test tafel, deur en handdoek eerst voorzichtig met weinig gewicht."
+      ],
+      fouten:["Schouders optrekken","Alleen met de armen trekken zonder schouderbladen te bewegen","Heupen laten knikken"],
+      spieren:["Bovenrug","biceps","grip"],
+      stoppen:"Bij schouderpijn, of als het materiaal niet stabiel aanvoelt."
+    }
+  },
+  {
+    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", animatie:"glutebridge",
+    niveaus:[
+      {n:1,naam:"Tweebenig",doelType:"reps",min:10,max:15,perKant:false},
+      {n:2,naam:"Met 3s hold bovenin",doelType:"reps",min:10,max:12,holdSec:3,perKant:false},
+      {n:3,naam:"Marching",doelType:"reps",min:6,max:10,perKant:true},
+      {n:4,naam:"Single leg",doelType:"reps",min:6,max:10,perKant:true}
+    ],
+    uitleg:{
+      kort:"Duw je heupen omhoog vanuit je billen tot knie, heup en schouder een lijn vormen.",
+      uitvoering:[
+        "Lig op je rug met gebogen knieën, voeten plat op heupbreedte, hakken dicht bij je billen.",
+        "Span je billen aan en duw je heupen omhoog tot knie, heup en schouder een rechte lijn vormen.",
+        "Houd kort vast en zak rustig terug."
+      ],
+      fouten:["Doorduwen vanuit de onderrug (holle rug bovenin)","Voeten te ver van je billen","Afzetten via je tenen"],
+      spieren:["Bilspieren","hamstrings"],
+      stoppen:"Hamstringkramp is onschuldig (zet je voeten dichterbij); rugpijn is een reden om te stoppen."
+    }
+  },
+  {
+    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", animatie:"deadbug",
+    niveaus:[
+      {n:1,naam:"Alleen benen",doelType:"reps",min:8,max:12,perKant:true},
+      {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:6,max:10,perKant:true},
+      {n:3,naam:"Traag tempo, hiel zweeft",doelType:"reps",min:6,max:10,perKant:true}
+    ],
+    uitleg:{
+      kort:"Onderrug blijft in contact met de vloer terwijl arm en been langzaam strekken.",
+      uitvoering:[
+        "Lig op je rug, armen recht omhoog, knieën gebogen boven je heupen.",
+        "Druk je onderrug licht in de vloer en houd dat contact de hele oefening.",
+        "Strek langzaam één been terwijl je de tegengestelde arm naar achteren brengt.",
+        "Kom rustig terug en wissel."
+      ],
+      fouten:["Onderrug komt los van de vloer","Te hoog tempo","Adem vasthouden"],
+      spieren:["Diepe buikspieren"],
+      stoppen:"Bij rugpijn of als je het vloercontact verliest."
+    }
+  },
+  {
+    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", animatie:"frontplank",
+    niveaus:[
+      {n:1,naam:"Op de knieën",doelType:"seconden",min:20,max:30,perKant:false},
+      {n:2,naam:"Volledig",doelType:"seconden",min:20,max:35,perKant:false},
+      {n:3,naam:"Volledig, langer of shoulder taps",doelType:"seconden",min:40,max:60,perKant:false}
+    ],
+    uitleg:{
+      kort:"Lichaam één rechte lijn op ellebogen en tenen, billen aangespannen.",
+      uitvoering:[
+        "Ellebogen onder je schouders, lichaam één rechte lijn (niveau 1: vanaf de knieën).",
+        "Span buik en billen aan en adem rustig door."
+      ],
+      fouten:["Heupen te hoog of doorzakken","Hoofd laten hangen"],
+      spieren:["De hele core"],
+      stoppen:"Bij onderrugpijn."
+    }
+  }
+];
+
+const WORKOUTS = [
+  {
+    id:"hoofd", naam:"Hoofdworkout", type:"hoofd", duurMinTekst:"35 tot 40 min",
+    warmingUp:["8x cat-camel","10x schouderrollen","10x heupcirkels per kant","8x lichte squat in rustig tempo"],
+    oefeningen:[
+      {oefeningId:"curlup", sets:3, superset:null, rustSec:60},
+      {oefeningId:"sideplank", sets:3, superset:null, rustSec:60},
+      {oefeningId:"birddog", sets:3, superset:null, rustSec:60},
+      {oefeningId:"squat", sets:3, superset:"4", rustSec:60},
+      {oefeningId:"pushup", sets:3, superset:"4", rustSec:60},
+      {oefeningId:"row", sets:3, superset:"5", rustSec:60},
+      {oefeningId:"glutebridge", sets:3, superset:"5", rustSec:60}
+    ]
+  },
+  {
+    id:"microA", naam:"Micro-workout: Core kort", type:"micro", duurMinTekst:"10 min",
+    warmingUp:["3x cat-camel als opwarming"],
+    oefeningen:[
+      {oefeningId:"curlup", sets:2, superset:null, rustSec:45},
+      {oefeningId:"sideplank", sets:2, superset:null, rustSec:45},
+      {oefeningId:"birddog", sets:2, superset:null, rustSec:45}
+    ]
+  },
+  {
+    id:"microB", naam:"Micro-workout: Romp en heup", type:"micro", duurMinTekst:"12 min",
+    warmingUp:["3x cat-camel"],
+    oefeningen:[
+      {oefeningId:"deadbug", sets:2, superset:null, rustSec:45},
+      {oefeningId:"frontplank", sets:2, superset:null, rustSec:45},
+      {oefeningId:"glutebridge", sets:2, superset:null, rustSec:45}
+    ]
+  }
+];
+
+function defaultProgramma(){
+  return {
+    blok:1, naam:"Blok 1", duurWeken:6, startDatum:null, verschovenDagen:0, blokreviewGedaan:false,
+    workouts: JSON.parse(JSON.stringify(WORKOUTS)),
+    oefeningen: JSON.parse(JSON.stringify(OEFENINGEN))
+  };
+}
+function defaultVoortgang(programma){
+  const v = {};
+  programma.oefeningen.forEach(o=>{
+    v[o.id] = {niveau:1, promotieTeller:0, zwaarTeller:0, nietLekkerTeller:0, vervangingsmarkering:false, rangeAdjust:0, geintroduceerd:false};
+  });
+  return v;
+}
+function defaultState(){
+  const programma = defaultProgramma();
+  return {
+    schemaVersion:1,
+    onboarded:false,
+    programma,
+    voortgang: defaultVoortgang(programma),
+    instellingen:{trainingsdag:2, reminder:true, reminderTijd:"20:00", seizoen:true, lengteCm:null, laatsteExport:null, disclaimerGezien:false, autoRun:true, spraak:true},
+    log:{sessies:[], gewicht:[], overgeslagenWeken:[], blokreviews:[]}
+  };
+}
+
+/* ===================== STATE ===================== */
+const STORAGE_KEY = "kernkracht_state_v1";
+let state = loadState();
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    if(!parsed.voortgang) parsed.voortgang = defaultVoortgang(parsed.programma);
+    if(typeof parsed.instellingen.autoRun!=="boolean") parsed.instellingen.autoRun = true;
+    if(typeof parsed.instellingen.spraak!=="boolean") parsed.instellingen.spraak = true;
+    return parsed;
+  }catch(e){ return defaultState(); }
+}
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+const ui = { screen:"vandaag", detailOefeningId:null, microKeuzeOpen:false, flow:null, exportBanner:null, voortgangTab:"oefeningen" };
+
+/* ===================== UTIL: datum & week ===================== */
+const DAGNAMEN = ["zo","ma","di","wo","do","vr","za"];
+const DAGNAMEN_VOL = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
+function todayMidnight(){ const d = new Date(); d.setHours(12,0,0,0); return d; }
+function isoDate(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,"0"); const day=String(d.getDate()).padStart(2,"0"); return `${y}-${m}-${day}`; }
+function parseIso(s){ return new Date(s+"T12:00:00"); }
+function addDays(d, n){ const r = new Date(d); r.setDate(r.getDate()+n); return r; }
+function fmtDatumKort(d){ if(typeof d === "string") d = parseIso(d); return d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"}); }
+function nextDateForWeekday(weekday){
+  const t = todayMidnight();
+  const diff = (weekday - t.getDay() + 7) % 7;
+  return addDays(t, diff);
+}
+function effectiveStart(programma){
+  return addDays(parseIso(programma.startDatum), programma.verschovenDagen||0);
+}
+function weekInfo(){
+  const start = effectiveStart(state.programma);
+  const today = todayMidnight();
+  const diffDays = Math.round((today-start)/86400000);
+  const weekNummer = Math.floor(diffDays/7)+1;
+  return {start, weekNummer, blokVoltooid: weekNummer > state.programma.duurWeken};
+}
+function weekStartDatum(weekNummer){
+  return addDays(effectiveStart(state.programma), (weekNummer-1)*7);
+}
+function sessiesInWeek(weekNummer){
+  const start = weekStartDatum(weekNummer);
+  const end = addDays(start,7);
+  return state.log.sessies.filter(s=>{
+    const d = parseIso(s.datum);
+    return d>=start && d<end;
+  });
+}
+function eindDatumBlok(){
+  return addDays(effectiveStart(state.programma), state.programma.duurWeken*7);
+}
+
+/* ===================== UTIL: lookups ===================== */
+function getOefening(id){ return state.programma.oefeningen.find(o=>o.id===id); }
+function getWorkout(id){ return state.programma.workouts.find(w=>w.id===id); }
+function getNiveau(oefening, n){ return oefening.niveaus.find(nv=>nv.n===n) || oefening.niveaus[0]; }
+function huidigNiveau(oefeningId){
+  const oef = getOefening(oefeningId);
+  const vg = state.voortgang[oefeningId];
+  return getNiveau(oef, vg ? vg.niveau : 1);
+}
+function doelBereik(oefeningId){
+  const niveau = huidigNiveau(oefeningId);
+  const adjust = (state.voortgang[oefeningId] && state.voortgang[oefeningId].rangeAdjust) || 0;
+  return {min: Math.max(1, niveau.min+adjust), max: Math.max(1, niveau.max+adjust), niveau};
+}
+function ensureVoortgang(oefeningId){
+  if(!state.voortgang[oefeningId]){
+    state.voortgang[oefeningId] = {niveau:1, promotieTeller:0, zwaarTeller:0, nietLekkerTeller:0, vervangingsmarkering:false, rangeAdjust:0, geintroduceerd:false};
+  }
+  return state.voortgang[oefeningId];
+}
+function heeftOoitGedaan(oefeningId){
+  return state.log.sessies.some(s=>s.sets.some(st=>st.oefeningId===oefeningId));
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ===================== STICK FIGURE SVG ===================== */
+function seg(p1,p2){ return `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>`; }
+function poseLines(pose){
+  let out = `<circle cx="${pose.head[0]}" cy="${pose.head[1]}" r="9" fill="currentColor"/>`;
+  if(pose.shoulder && pose.hip) out += seg(pose.shoulder,pose.hip);
+  if(pose.shoulder && pose.elbow) out += seg(pose.shoulder,pose.elbow);
+  if(pose.elbow && pose.hand) out += seg(pose.elbow,pose.hand);
+  if(pose.shoulder2 && pose.elbow2) out += seg(pose.shoulder2,pose.elbow2);
+  if(pose.elbow2 && pose.hand2) out += seg(pose.elbow2,pose.hand2);
+  if(pose.hip && pose.knee) out += seg(pose.hip,pose.knee);
+  if(pose.knee && pose.foot) out += seg(pose.knee,pose.foot);
+  if(pose.hip && pose.knee2) out += seg(pose.hip,pose.knee2);
+  if(pose.knee2 && pose.foot2) out += seg(pose.knee2,pose.foot2);
+  return out;
+}
+const ANIMATIONS = {
+  curlup:{
+    context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[38,102],shoulder:[56,102],elbow:[70,106],hand:[88,109],hip:[100,105],knee:[132,90],foot:[150,110],knee2:[136,107],foot2:[172,108]},
+    b:{head:[44,90],shoulder:[62,94],elbow:[74,100],hand:[90,106],hip:[100,105],knee:[132,90],foot:[150,110],knee2:[136,107],foot2:[172,108]}
+  },
+  sideplank:{
+    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[52,72],shoulder:[68,78],elbow:[68,98],hand:[80,104],hip:[100,92],knee:[128,102],foot:[150,108]},
+    b:{head:[48,50],shoulder:[66,56],elbow:[68,98],hand:[80,104],hip:[100,60],knee:[128,65],foot:[150,70]}
+  },
+  birddog:{
+    context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[58,58],shoulder:[80,62],elbow:[80,76],hand:[80,92],hip:[130,66],knee:[130,92],foot:[130,96]},
+    b:{head:[40,48],shoulder:[78,60],elbow:[62,48],hand:[46,42],hip:[130,66],knee:[158,72],foot:[178,80]}
+  },
+  squat:{
+    context:'<line x1="15" y1="127" x2="195" y2="127" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[100,38],shoulder:[100,54],elbow:[92,72],hand:[86,88],hip:[100,80],knee:[100,104],foot:[100,125]},
+    b:{head:[92,72],shoulder:[92,86],elbow:[70,90],hand:[52,88],hip:[86,100],knee:[100,104],foot:[100,125]}
+  },
+  pushup:{
+    context:'<line x1="40" y1="30" x2="40" y2="115" stroke="currentColor" stroke-opacity=".2" stroke-width="6"/>',
+    a:{head:[38,58],shoulder:[54,62],elbow:[52,88],hand:[58,110],hip:[118,68],knee:[150,72],foot:[172,74]},
+    b:{head:[42,78],shoulder:[54,82],elbow:[46,94],hand:[58,110],hip:[118,86],knee:[150,88],foot:[172,88]}
+  },
+  row:{
+    context:'<rect x="140" y="30" width="8" height="70" fill="currentColor" fill-opacity=".2"/>',
+    a:{head:[142,48],shoulder:[130,60],elbow:[142,48],hand:[148,38],hip:[92,90],knee:[76,104],foot:[58,120]},
+    b:{head:[122,44],shoulder:[113,54],elbow:[131,46],hand:[148,38],hip:[92,90],knee:[76,104],foot:[58,120]}
+  },
+  glutebridge:{
+    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[40,100],shoulder:[56,100],elbow:[62,92],hand:[74,90],hip:[92,106],knee:[122,90],foot:[132,110]},
+    b:{head:[40,100],shoulder:[56,97],elbow:[62,90],hand:[74,88],hip:[92,86],knee:[122,90],foot:[132,110]}
+  },
+  deadbug:{
+    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[70,96],shoulder:[90,96],elbow:[88,70],hand:[85,46],hip:[120,96],knee:[116,70],foot:[112,46]},
+    b:{head:[70,96],shoulder:[90,96],elbow:[68,82],hand:[48,78],hip:[120,96],knee:[146,90],foot:[172,94]}
+  },
+  frontplank:{
+    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
+    a:{head:[38,68],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,64],knee:[150,80],foot:[170,88]},
+    b:{head:[38,80],shoulder:[54,82],elbow:[54,100],hand:[54,105],hip:[112,85],knee:[150,86],foot:[170,88]}
+  }
+};
+function stickFigureSvg(animatieId, opts){
+  opts = opts||{};
+  const anim = ANIMATIONS[animatieId];
+  if(!anim){
+    return `<svg viewBox="0 0 200 140" class="stickfig"><circle cx="100" cy="70" r="26" fill="none" stroke="currentColor" stroke-width="4"/><text x="100" y="76" text-anchor="middle" font-size="11" fill="currentColor">geen animatie</text></svg>`;
+  }
+  const animate = opts.animate!==false;
+  return `<svg viewBox="0 0 200 140" class="stickfig ${animate?'animate':''}" style="color:var(--text)">
+    ${anim.context||""}
+    <g class="pose1">${poseLines(anim.a)}</g>
+    <g class="pose2">${poseLines(anim.b)}</g>
+  </svg>`;
+}
+
+/* ===================== RENDER ROOT ===================== */
+const APP_EL = document.getElementById("app");
+function render(){
+  save();
+  if(state.onboarded && !ui.flow && ui.screen==="vandaag"){
+    const wi = weekInfo();
+    if(wi.blokVoltooid && !state.programma.blokreviewGedaan) ui.screen = "blokreview";
+  }
+  if(ui.screen==="afsluiten" && !ui.afsluit) ui.screen = "vandaag";
+  let html = "";
+  if(!state.onboarded){
+    html = renderOnboarding();
+  } else if(ui.flow){
+    html = renderWorkoutFlow();
+  } else {
+    switch(ui.screen){
+      case "vandaag": html = renderHeader("Kernkracht") + renderVandaag(); break;
+      case "afsluiten": html = renderHeader("Sessie afronden") + renderAfsluiten(); break;
+      case "voortgang": html = renderHeader("Voortgang", true) + renderVoortgang(); break;
+      case "blokreview": html = renderHeader("Blokreview") + renderBlokreview(); break;
+      case "instellingen": html = renderHeader("Instellingen", true) + renderInstellingen(); break;
+      case "export": html = renderHeader("Export & import", true) + renderExport(); break;
+      default: html = renderHeader("Kernkracht") + renderVandaag();
+    }
+  }
+  let overlay = "";
+  if(ui.detailOefeningId) overlay += renderDetailModal(ui.detailOefeningId);
+  if(ui.microKeuzeOpen) overlay += renderMicroKeuzeModal();
+  if(!state.instellingen.disclaimerGezien && state.onboarded) overlay += renderDisclaimerModal();
+  APP_EL.innerHTML = html + overlay;
+  wireCommon();
+}
+function renderHeader(titel, backToVandaag){
+  return `<div class="app-header">
+    ${backToVandaag ? `<button class="icon-btn" data-action="ga-vandaag" aria-label="Terug">‹</button>` : `<span style="width:44px"></span>`}
+    <h1>${escapeHtml(titel)}</h1>
+    <button class="icon-btn" data-action="ga-instellingen" aria-label="Instellingen">⚙</button>
+  </div>`;
+}
+function goto(screen){ ui.screen = screen; ui.flow=null; render(); window.scrollTo(0,0); }
+
+/* ===================== ONBOARDING (F10) ===================== */
+function renderOnboarding(){
+  const ob = ui.onboarding || (ui.onboarding = {naam:"Blok 1", trainingsdag:2, seizoen:true, lengteCm:"", akkoord:false});
+  return `<div class="screen">
+    <h1 style="margin-top:8px">Welkom bij Kernkracht</h1>
+    <p class="muted">Een rustige workout-app voor thuis, gericht op een sterke core. Vul een paar dingen in om te starten.</p>
+    <div class="card">
+      <div class="field">
+        <label for="ob-naam">Naam van dit blok</label>
+        <input type="text" id="ob-naam" value="${escapeHtml(ob.naam)}" data-bind="ob-naam">
+      </div>
+      <div class="field">
+        <label>Trainingsdag (hoofdworkout)</label>
+        <div class="daypicker">
+          ${[1,2,3,4,5,6,0].map(d=>`<button data-action="ob-dag" data-dag="${d}" class="${ob.trainingsdag===d?'active':''}">${DAGNAMEN[d]}</button>`).join("")}
+        </div>
+        <p class="fine">Tip: kies bij voorkeur niet de dag vóór een hockeywedstrijd.</p>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-weight:600">Seizoensmodus</div>
+          <div class="fine">Aan: 1 hoofdworkout per week is de norm (hockeyseizoen). Uit: hoofdworkout + 1 micro-workout.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="ob-seizoen" ${ob.seizoen?"checked":""}><span class="track"></span><span class="thumb"></span></label>
+      </div>
+      <div class="field">
+        <label for="ob-lengte">Lengte in cm (optioneel, eenmalig)</label>
+        <input type="number" id="ob-lengte" value="${escapeHtml(ob.lengteCm)}" placeholder="bijv. 182">
+      </div>
+    </div>
+    <div class="card">
+      <h3>Even dit nog</h3>
+      <p class="small">${disclaimerTekst()}</p>
+      <label class="row" style="cursor:pointer">
+        <input type="checkbox" id="ob-akkoord" ${ob.akkoord?"checked":""} style="width:22px;height:22px">
+        <span class="small">Ik heb dit gelezen en begrepen.</span>
+      </label>
+    </div>
+    <button class="btn btn-primary btn-block btn-huge" data-action="ob-start" ${ob.akkoord?"":"disabled"}>Start met trainen</button>
+  </div>`;
+}
+function disclaimerTekst(){
+  return "Dit is geen medisch advies. Spierverzuim hoort bij trainen, maar pijn (anders dan gewone spiervermoeidheid) is een reden om direct te stoppen. Houdt een klacht aan, raadpleeg dan een fysiotherapeut of arts. Elke oefening heeft hieronder een eigen stopcriterium.";
+}
+function renderDisclaimerModal(){
+  return `<div class="modal-overlay" data-overlay="disclaimer">
+    <div class="modal centered">
+      <h3>Voor je begint</h3>
+      <p class="small">${disclaimerTekst()}</p>
+      <button class="btn btn-primary btn-block" data-action="disclaimer-akkoord">Begrepen</button>
+    </div>
+  </div>`;
+}
+
+/* ===================== VANDAAG (scherm 1) ===================== */
+function suggestieWorkoutId(){
+  const wi = weekInfo();
+  const sessies = sessiesInWeek(wi.weekNummer);
+  const hoofdGedaan = sessies.some(s=>s.workoutId==="hoofd");
+  const microCount = sessies.filter(s=>s.workoutId!=="hoofd").length;
+  if(!hoofdGedaan) return "hoofd";
+  if(!state.instellingen.seizoen && microCount<1) return "microA";
+  return null;
+}
+function normTekst(){
+  return state.instellingen.seizoen
+    ? "Norm: 1 hoofdworkout per week. Micro-workouts zijn optioneel."
+    : "Norm: hoofdworkout + 1 micro-workout per week.";
+}
+function renderVandaag(){
+  const wi = weekInfo();
+  const sugId = suggestieWorkoutId();
+  const workout = sugId ? getWorkout(sugId) : getWorkout("hoofd");
+  const primaryLabel = sugId ? `Start ${workout.naam}` : `Volgende hoofdworkout: ${fmtDatumKort(addDays(weekStartDatum(wi.weekNummer+1),0))}`;
+  let banners = "";
+  if(state.instellingen.laatsteExport){
+    const dagen = Math.round((todayMidnight()-parseIso(state.instellingen.laatsteExport))/86400000);
+    if(dagen>31) banners += `<div class="banner">Je laatste export is ${dagen} dagen geleden. Maak een nieuwe back-up via <a href="#" data-action="ga-export">export</a>.</div>`;
+  } else {
+    banners += `<div class="banner">Je hebt nog geen back-up gemaakt. Maak er één via <a href="#" data-action="ga-export">export</a> zodra je wat data hebt.</div>`;
+  }
+  if(wi.blokVoltooid && state.programma.blokreviewGedaan){
+    banners += `<div class="banner" style="background:var(--primary-dim);color:var(--primary)">Dit blok is afgerond. Importeer een nieuw programmablok via <a href="#" data-action="ga-export">export &amp; import</a> om verder te gaan.</div>`;
+  }
+  const overgeslagen = state.log.overgeslagenWeken.length;
+  const weekBadge = wi.weekNummer<1
+    ? `<span class="badge">Start ${fmtDatumKort(state.programma.startDatum)}</span>`
+    : (wi.blokVoltooid ? `<span class="badge">Blok afgerond</span>` : `<span class="badge">Week ${wi.weekNummer} / ${state.programma.duurWeken}</span>`);
+  return `<div class="screen">
+    <div class="row" style="margin-bottom:10px">
+      <span class="badge">${escapeHtml(state.programma.naam)}</span>
+      ${weekBadge}
+    </div>
+    ${banners}
+    <div class="card center">
+      <h2 style="margin-bottom:4px">${escapeHtml(sugId?workout.naam:"Alles gedaan deze week")}</h2>
+      <p class="muted">${sugId? `${escapeHtml(workout.duurMinTekst)} · ${workout.oefeningen.length} oefeningen` : "Je kunt altijd nog een extra micro-workout doen."}</p>
+      <button class="btn btn-primary btn-block btn-huge" data-action="start-workout" data-workout="${sugId||'hoofd'}" style="margin-top:14px">${sugId? `Start ${escapeHtml(workout.naam)}` : `Start ${escapeHtml(workout.naam)} (extra)`}</button>
+      <div class="row wrap" style="margin-top:12px;justify-content:center">
+        <button class="btn btn-sm" data-action="open-microkeuze">Kies micro-workout</button>
+        <button class="btn btn-sm" data-action="week-overslaan">Week overslaan</button>
+      </div>
+    </div>
+    <p class="fine center">${normTekst()}</p>
+    <div class="row wrap" style="justify-content:center;margin-top:10px">
+      <button class="btn btn-ghost btn-sm" data-action="ga-voortgang">Voortgang</button>
+      <button class="btn btn-ghost btn-sm" data-action="ga-instellingen">Instellingen</button>
+    </div>
+    ${overgeslagen? `<p class="fine center" style="margin-top:8px">${overgeslagen} week${overgeslagen===1?'':'en'} overgeslagen dit blok — geen probleem.</p>`:""}
+  </div>`;
+}
+function renderMicroKeuzeModal(){
+  const opts = WORKOUTS.filter(w=>w.type!=="hoofd").map(w=>getWorkout(w.id));
+  return `<div class="modal-overlay" data-overlay="microkeuze">
+    <div class="modal">
+      <h3>Kies een workout</h3>
+      <div class="stack">
+        <button class="btn btn-block" data-action="start-workout" data-workout="hoofd">Hoofdworkout — ${escapeHtml(getWorkout('hoofd').duurMinTekst)}</button>
+        ${opts.map(w=>`<button class="btn btn-block" data-action="start-workout" data-workout="${w.id}">${escapeHtml(w.naam)} — ${escapeHtml(w.duurMinTekst)}</button>`).join("")}
+        <button class="btn btn-ghost btn-block" data-action="close-microkeuze">Annuleren</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ===================== WORKOUT-FLOW (scherm 2) ===================== */
+function buildSteps(workout){
+  const items = workout.oefeningen;
+  const groups = [];
+  let i=0;
+  while(i<items.length){
+    const cur = items[i];
+    if(cur.superset){
+      const key = cur.superset;
+      const g = [];
+      while(i<items.length && items[i].superset===key){ g.push(items[i]); i++; }
+      groups.push(g);
+    } else {
+      groups.push([cur]);
+      i++;
+    }
+  }
+  const steps = [];
+  groups.forEach((group, gi)=>{
+    const maxSets = Math.max(...group.map(g=>g.sets));
+    for(let s=1; s<=maxSets; s++){
+      group.forEach(wo=>{
+        if(s>wo.sets) return;
+        const oef = getOefening(wo.oefeningId);
+        const {min,max,niveau} = doelBereik(wo.oefeningId);
+        const base = {type:"set", oefeningId:wo.oefeningId, oefening:oef, set:s, totalSets:wo.sets, niveau, min, max, rustSec:wo.rustSec};
+        if(niveau.perKant){
+          steps.push(Object.assign({},base,{kant:"links"}));
+          steps.push(Object.assign({},base,{kant:"rechts"}));
+        } else {
+          steps.push(Object.assign({},base,{kant:null}));
+        }
+      });
+      const isLast = (gi===groups.length-1) && (s===maxSets);
+      if(!isLast) steps.push({type:"rest", sec:group[0].rustSec||60});
+    }
+  });
+  return steps;
+}
+function startWorkout(workoutId){
+  const workout = getWorkout(workoutId);
+  const steps = buildSteps(workout);
+  ui.flow = {
+    workoutId, steps, index:0, results:[], startTime:Date.now(),
+    warmup: workout.warmingUp.length>0, warmupAnnounced:false, timer:null, restRemaining:0, restTotal:0,
+    holdTimer:null, holdRemaining:0, holdTotal:0, holdRunning:false,
+    secTimer:null, secElapsed:0, secTotal:0, secRunning:false,
+    inputVal:null,
+    autoRun: state.instellingen.autoRun!==false,
+    autoTimer:null, autoMode:false, autoStarted:false, autoAnnounced:false, autoRepsCompleted:0
+  };
+  render();
+}
+function currentStep(){ return ui.flow.steps[ui.flow.index]; }
+function clearTimers(){
+  if(ui.flow.timer){ clearInterval(ui.flow.timer); ui.flow.timer=null; }
+  if(ui.flow.holdTimer){ clearInterval(ui.flow.holdTimer); ui.flow.holdTimer=null; }
+  if(ui.flow.secTimer){ clearInterval(ui.flow.secTimer); ui.flow.secTimer=null; }
+  // clearInterval also cancels setTimeout handles in every evergreen browser (shared id pool) — autoTimer uses both
+  if(ui.flow.autoTimer){ clearInterval(ui.flow.autoTimer); ui.flow.autoTimer=null; }
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+}
+function advanceStep(){
+  clearTimers();
+  ui.flow.index++;
+  ui.flow.inputVal = null;
+  ui.flow.secElapsed = 0; ui.flow.secTotal = 0; ui.flow.secRunning=false;
+  ui.flow.holdRunning=false; ui.flow.holdTotal=0;
+  ui.flow.autoMode=false; ui.flow.autoStarted=false; ui.flow.autoAnnounced=false; ui.flow.autoRepsCompleted=0;
+  if(ui.flow.index >= ui.flow.steps.length){
+    finishWorkout();
+  } else {
+    render();
+  }
+}
+/* ===================== TTS: beste beschikbare stem kiezen ===================== */
+let ttsVoice = null;
+let ttsVoicesChecked = false;
+function scoreVoice(v){
+  const lang = (v.lang||"").toLowerCase();
+  let score = 0;
+  if(lang==="nl-nl") score += 4;
+  else if(lang.startsWith("nl")) score += 2;
+  else return -1;
+  if(!v.localService) score += 3; // netwerk/cloud-stemmen klinken doorgaans natuurlijker dan het lokale device-tts
+  if(/google/i.test(v.name)) score += 1;
+  return score;
+}
+function refreshTtsVoice(){
+  if(!("speechSynthesis" in window)) return;
+  const voices = speechSynthesis.getVoices();
+  if(!voices || voices.length===0) return;
+  ttsVoicesChecked = true;
+  let best = null, bestScore = -1;
+  voices.forEach(v=>{
+    const s = scoreVoice(v);
+    if(s>bestScore){ bestScore = s; best = v; }
+  });
+  ttsVoice = best;
+}
+if("speechSynthesis" in window){
+  refreshTtsVoice();
+  speechSynthesis.onvoiceschanged = refreshTtsVoice;
+}
+function speak(text){
+  if(!state.instellingen.spraak) return;
+  if(!("speechSynthesis" in window)) return;
+  try{
+    if(!ttsVoicesChecked) refreshTtsVoice();
+    const u = new SpeechSynthesisUtterance(text);
+    if(ttsVoice){ u.voice = ttsVoice; u.lang = ttsVoice.lang; }
+    else { u.lang = "nl-NL"; }
+    u.rate = 1;
+    u.pitch = 1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speakTest(){
+  refreshTtsVoice();
+  if("speechSynthesis" in window){
+    try{
+      const u = new SpeechSynthesisUtterance("Dit is de stem die je hoort tijdens je workout.");
+      if(ttsVoice){ u.voice = ttsVoice; u.lang = ttsVoice.lang; } else { u.lang = "nl-NL"; }
+      u.rate = 1; u.pitch = 1;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  render();
+}
+function stepAnnounceText(step){
+  const kantTxt = step.kant ? (step.kant==="links" ? ", links" : ", rechts") : "";
+  const setTxt = step.totalSets>1 ? `, set ${step.set} van ${step.totalSets}` : "";
+  if(step.niveau.doelType==="seconden") return `${step.oefening.naam}${kantTxt}${setTxt}. Doel: ${step.min} tot ${step.max} seconden.`;
+  const woord = step.niveau.doelType==="holds" ? "holds" : "herhalingen";
+  const holdTxt = step.niveau.holdSec ? `, elke keer ${step.niveau.holdSec} seconden vasthouden` : "";
+  return `${step.oefening.naam}${kantTxt}${setTxt}. Doel: ${step.min} tot ${step.max} ${woord}${holdTxt}.`;
+}
+function isAutoCapable(step){ return step.niveau.doelType==="seconden" || !!step.niveau.holdSec; }
+// Timer ticks patch just the ring/number instead of a full render() — a full render tears down and
+// rebuilds every node (incl. re-wiring all listeners and restarting the stick-figure CSS animation),
+// which is wasteful and visibly janky when it happens every second during a hold or rest.
+function patchWfTimer(pct, timeText){
+  const ring = document.getElementById("wf-ring");
+  const time = document.getElementById("wf-time");
+  if(!ring || !time){ render(); return; }
+  ring.style.setProperty("--pct", pct);
+  time.textContent = timeText;
+}
+function flowControls(){
+  const f = ui.flow;
+  return `<div class="row wrap" style="justify-content:center;gap:8px;margin-bottom:6px">
+    <button class="btn btn-sm ${f.autoRun?"":"btn-ghost"}" data-action="toggle-autorun">Automatisch: ${f.autoRun?"aan":"uit"}</button>
+    <button class="btn btn-sm ${state.instellingen.spraak?"":"btn-ghost"}" data-action="toggle-spraak">Stem: ${state.instellingen.spraak?"aan":"uit"}</button>
+  </div>`;
+}
+function startAutoSeconden(){
+  const f = ui.flow;
+  const step = currentStep();
+  f.secTotal = step.max;
+  f.secElapsed = 0;
+  f.secRunning = true;
+  f.autoMode = true;
+  speak(stepAnnounceText(step) + " Start.");
+  f.secTimer = setInterval(()=>{
+    f.secElapsed++;
+    if(f.secTotal>15 && f.secElapsed===f.secTotal-10) speak("Nog tien seconden.");
+    if(f.secElapsed >= f.secTotal){
+      clearInterval(f.secTimer); f.secTimer=null;
+      f.secRunning = false; f.autoMode = false;
+      if(navigator.vibrate) navigator.vibrate(200);
+      speak("Klaar.");
+      f.inputVal = f.secTotal;
+      logCurrentSet();
+      return;
+    }
+    patchWfTimer(Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)), f.secElapsed+"s");
+  },1000);
+}
+function startAutoReps(){
+  const f = ui.flow;
+  const step = currentStep();
+  const holdSec = step.niveau.holdSec;
+  const target = step.max;
+  f.autoMode = true;
+  f.autoRepsCompleted = 0;
+  f.holdTotal = holdSec;
+  f.holdRemaining = holdSec;
+  f.holdRunning = true;
+  speak(stepAnnounceText(step) + " Vast.");
+  autoRepTick(holdSec, target);
+}
+function autoRepTick(holdSec, target){
+  const f = ui.flow;
+  f.autoTimer = setInterval(()=>{
+    f.holdRemaining--;
+    if(f.holdRemaining<=0){
+      clearInterval(f.autoTimer); f.autoTimer=null;
+      f.holdRunning = false;
+      f.autoRepsCompleted++;
+      if(navigator.vibrate) navigator.vibrate(120);
+      if(f.autoRepsCompleted >= target){
+        speak("Klaar.");
+        f.autoMode = false;
+        f.inputVal = target;
+        logCurrentSet();
+        return;
+      }
+      speak("Los.");
+      f.autoTimer = setTimeout(()=>{
+        f.holdRunning = true;
+        f.holdRemaining = holdSec;
+        speak("Vast.");
+        autoRepTick(holdSec, target);
+      }, 1800);
+      render();
+      return;
+    }
+    patchWfTimer(Math.round((1-f.holdRemaining/holdSec)*100), f.holdRemaining+"s");
+  },1000);
+}
+function stopAuto(){
+  const f = ui.flow;
+  const step = currentStep();
+  clearTimers();
+  f.autoMode = false;
+  if(step.niveau.doelType==="seconden"){ f.secRunning=false; f.inputVal=f.secElapsed; }
+  else { f.holdRunning=false; f.inputVal=f.autoRepsCompleted; }
+  render();
+}
+function finishWorkout(){
+  const workoutId = ui.flow.workoutId;
+  const results = ui.flow.results;
+  const durMin = Math.max(1, Math.round((Date.now()-ui.flow.startTime)/60000));
+  const oefeningIds = [...new Set(results.map(r=>r.oefeningId))];
+  ui.afsluit = {
+    workoutId, results, durMin,
+    feedback: Object.fromEntries(oefeningIds.map(id=>[id,"goed"]))
+  };
+  ui.flow = null;
+  ui.screen = "afsluiten";
+  render();
+}
+const WARMUP_UITLEG = {
+  "cat-camel": "Op handen en knieën: rond je rug bol als een kat, en beweeg daarna rustig naar de tegenovergestelde stand met je buik iets naar de vloer. Rustig tempo, geen kracht.",
+  "schouderrollen": "Sta rechtop en rol je schouders in rustige, grote cirkels naar achteren.",
+  "heupcirkels": "Handen in je zij, maak rustige grote cirkels met je heupen, eerst de ene kant op, dan de andere.",
+  "lichte squat": "Een paar keer licht zakken en weer overeind komen, zoals de squat verderop in de workout, maar dan zonder te tellen op kracht — gewoon je lijf op gang brengen."
+};
+function warmupUitlegFor(item){
+  const key = Object.keys(WARMUP_UITLEG).find(k=>item.toLowerCase().includes(k));
+  return key ? WARMUP_UITLEG[key] : "";
+}
+function renderWorkoutFlow(){
+  const f = ui.flow;
+  const workout = getWorkout(f.workoutId);
+  if(f.warmup){
+    if(!f.warmupAnnounced){ f.warmupAnnounced = true; speak("Warming-up. " + workout.warmingUp.join(". ")); }
+    return `<div class="screen">
+      ${flowControls()}
+      <div class="card">
+        <h2>Warming-up</h2>
+        <div class="stack">${workout.warmingUp.map(w=>`<div><b>${escapeHtml(w)}</b><div class="muted small">${escapeHtml(warmupUitlegFor(w))}</div></div>`).join("")}</div>
+      </div>
+      <button class="btn btn-primary btn-block btn-huge" data-action="warmup-klaar">Warming-up gedaan</button>
+      <button class="btn btn-ghost btn-block" data-action="stop-workout" style="margin-top:8px">Workout afbreken</button>
+    </div>`;
+  }
+  const step = currentStep();
+  if(!step) return "";
+  if(step.type==="rest") return renderRestStep(step);
+  return renderSetStep(step);
+}
+function progressDots(){
+  const f = ui.flow;
+  return `<div class="progress-dots">${f.steps.map((s,i)=>{
+    if(s.type==="rest") return "";
+    const cls = i<f.index?"done":(i===f.index?"now":"");
+    return `<span class="${cls}"></span>`;
+  }).join("")}</div>`;
+}
+function renderRestStep(step){
+  const f = ui.flow;
+  if(f.restTotal===0){
+    f.restTotal=step.sec; f.restRemaining=step.sec;
+    speak(`Rust, ${step.sec} seconden.`);
+    startRestTimer();
+  }
+  const pct = Math.round((1 - f.restRemaining/f.restTotal)*100);
+  return `<div class="screen center">
+    ${flowControls()}
+    ${progressDots()}
+    <h2 style="margin-top:20px">Rust</h2>
+    <div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.restRemaining}s</div><div class="muted small">rust</div></div></div>
+    <button class="btn btn-primary btn-block btn-huge" data-action="rest-skip">Overslaan</button>
+  </div>`;
+}
+function startRestTimer(){
+  const f = ui.flow;
+  f.timer = setInterval(()=>{
+    f.restRemaining--;
+    if(f.restRemaining===10 && f.restTotal>15) speak("Nog tien seconden.");
+    if(f.restRemaining<=0){
+      clearInterval(f.timer); f.timer=null;
+      if(navigator.vibrate) navigator.vibrate(200);
+      f.restTotal=0; f.restRemaining=0;
+      speak("Ga verder.");
+      advanceStep();
+    } else {
+      patchWfTimer(Math.round((1-f.restRemaining/f.restTotal)*100), f.restRemaining+"s");
+    }
+  },1000);
+}
+function doelLabel(step){
+  const {oefening,niveau,min,max,kant} = step;
+  const kantTxt = kant ? ` — ${kant==="links"?"linkerkant":"rechterkant"}` : "";
+  if(niveau.doelType==="seconden") return `Doel: ${min}-${max} sec${kantTxt}`;
+  const holdTxt = niveau.holdSec ? `, hold ${niveau.holdSec} sec per rep` : "";
+  const woord = niveau.doelType==="holds" ? "holds" : "reps";
+  return `Doel: ${min}-${max} ${woord}${holdTxt}${kantTxt}`;
+}
+function renderSetStep(step){
+  const f = ui.flow;
+  const oef = step.oefening;
+  const vg = ensureVoortgang(step.oefeningId);
+  if(!vg.geintroduceerd){ vg.geintroduceerd = true; ui.detailOefeningId = step.oefeningId; }
+  const isSeconden = step.niveau.doelType==="seconden";
+  const autoCapable = isAutoCapable(step);
+  if(f.inputVal===null && !f.autoMode){ f.inputVal = step.max; }
+
+  if(f.autoRun && autoCapable && !f.autoStarted){
+    f.autoStarted = true;
+    if(isSeconden) startAutoSeconden(); else startAutoReps();
+  } else if(f.autoRun && !autoCapable && !f.autoAnnounced){
+    f.autoAnnounced = true;
+    speak(stepAnnounceText(step) + " Doe je eigen tempo en tik daarna op Set loggen.");
+  }
+
+  const setLabel = step.totalSets>1 ? `Set ${step.set} van ${step.totalSets}` : "Set";
+  let timerBlock = "";
+  let showManualControls = true;
+  if(isSeconden){
+    const pct = f.secTotal ? Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)) : 0;
+    if(f.autoMode && f.secRunning){
+      showManualControls = false;
+      timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.secElapsed}s</div><div class="muted small">automatisch</div></div></div>
+      <div class="row" style="justify-content:center;margin-bottom:14px">
+        <button class="btn btn-ghost" data-action="auto-stop">Stoppen / handmatig</button>
+      </div>`;
+    } else {
+      timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.secElapsed}s</div><div class="muted small">${f.secRunning?"bezig":"gestopt"}</div></div></div>
+      <div class="row" style="justify-content:center;gap:12px;margin-bottom:14px">
+        ${f.secRunning
+          ? `<button class="btn btn-primary" data-action="sec-stop">Stop</button>`
+          : `<button class="btn btn-primary" data-action="sec-start">${f.secElapsed>0?"Hervat":"Start hold"}</button>`}
+        ${f.secElapsed>0 && !f.secRunning ? `<button class="btn btn-ghost" data-action="sec-reset">Reset</button>` : ""}
+      </div>`;
+    }
+  } else if(step.niveau.holdSec){
+    const pct = f.holdTotal ? Math.round((1-f.holdRemaining/f.holdTotal)*100) : 0;
+    if(f.autoMode){
+      showManualControls = false;
+      timerBlock = `<p class="center muted small" style="margin-bottom:4px">Automatisch — rep ${Math.min(f.autoRepsCompleted+1, step.max)} van ${step.max}</p>
+      <div class="row" style="justify-content:center;align-items:center;gap:14px;margin-bottom:10px">
+        <div class="timer-ring" id="wf-ring" style="width:110px;height:110px;--pct:${pct}"><div class="inner" style="width:88px;height:88px"><div class="time" id="wf-time" style="font-size:22px">${f.holdRunning?f.holdRemaining:step.niveau.holdSec}s</div></div></div>
+      </div>
+      <div class="row" style="justify-content:center;margin-bottom:14px">
+        <button class="btn btn-ghost" data-action="auto-stop">Stoppen / handmatig</button>
+      </div>`;
+    } else {
+      timerBlock = `<div class="row" style="justify-content:center;align-items:center;gap:14px;margin-bottom:10px">
+      <div class="timer-ring" id="wf-ring" style="width:110px;height:110px;--pct:${pct}"><div class="inner" style="width:88px;height:88px"><div class="time" id="wf-time" style="font-size:22px">${f.holdRunning?f.holdRemaining:step.niveau.holdSec}s</div></div></div>
+      <button class="btn" data-action="hold-start" ${f.holdRunning?"disabled":""}>Start hold-timer</button>
+    </div>`;
+    }
+  }
+  const valLabel = isSeconden ? "seconden" : (step.niveau.doelType==="holds" ? "holds" : "reps");
+  const autoBadge = autoCapable ? `<span class="badge">Handsfree</span>` : `<span class="badge warn">1 tik per set</span>`;
+  return `<div class="screen">
+    ${flowControls()}
+    ${progressDots()}
+    <div class="space-between">
+      <div>
+        <h2 style="margin-bottom:2px">${escapeHtml(oef.naam)}${step.kant?` (${step.kant==="links"?"links":"rechts"})`:""}</h2>
+        <p class="muted small" style="margin-bottom:6px">${escapeHtml(step.niveau.naam)} · niveau ${step.niveau.n} · ${setLabel}</p>
+        ${autoBadge}
+      </div>
+      <button class="icon-btn" data-action="open-uitleg" data-oefening="${oef.id}" aria-label="Volledige uitleg">i</button>
+    </div>
+    <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
+    <p class="center">${doelLabel(step)}</p>
+    ${timerBlock}
+    ${showManualControls && !isSeconden ? `<div class="stepper">
+      <button data-action="val-min">−</button>
+      <div><div class="val" id="stepper-val">${f.inputVal}</div><span class="unit">${valLabel}</span></div>
+      <button data-action="val-plus">+</button>
+    </div>` : ""}
+    <button class="btn btn-block" data-action="open-uitleg" data-oefening="${oef.id}" style="margin-bottom:10px">Volledige uitleg</button>
+    ${showManualControls ? `<button class="btn btn-primary btn-block btn-huge" data-action="log-set">Set loggen</button>` : ""}
+    <button class="btn btn-ghost btn-block" data-action="stop-workout" style="margin-top:8px">Workout afbreken</button>
+  </div>`;
+}
+function secStart(){
+  const f = ui.flow;
+  f.secTotal = currentStep().max;
+  f.secRunning = true;
+  f.secTimer = setInterval(()=>{
+    f.secElapsed++;
+    patchWfTimer(Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)), f.secElapsed+"s");
+  },1000);
+  render();
+}
+function secStop(){
+  const f = ui.flow;
+  if(f.secTimer){ clearInterval(f.secTimer); f.secTimer=null; }
+  f.secRunning = false;
+  f.inputVal = f.secElapsed;
+  render();
+}
+function secReset(){
+  const f = ui.flow;
+  f.secElapsed = 0; f.inputVal = 0;
+  render();
+}
+function holdStart(){
+  const f = ui.flow;
+  const step = currentStep();
+  f.holdTotal = step.niveau.holdSec;
+  f.holdRemaining = step.niveau.holdSec;
+  f.holdRunning = true;
+  f.holdTimer = setInterval(()=>{
+    f.holdRemaining--;
+    if(f.holdRemaining<=0){
+      clearInterval(f.holdTimer); f.holdTimer=null;
+      if(navigator.vibrate) navigator.vibrate(150);
+      f.holdRunning=false; f.holdTotal=0;
+      render();
+      return;
+    }
+    patchWfTimer(Math.round((1-f.holdRemaining/f.holdTotal)*100), f.holdRemaining+"s");
+  },1000);
+  render();
+}
+function logCurrentSet(){
+  const f = ui.flow;
+  const step = currentStep();
+  const isSeconden = step.niveau.doelType==="seconden";
+  const val = isSeconden ? (f.inputVal!==null?f.inputVal:f.secElapsed) : f.inputVal;
+  const entry = {oefeningId:step.oefeningId, set:step.set, niveau:step.niveau.n, kant:step.kant||null};
+  if(isSeconden){ entry.seconden = val; entry.reps = 1; }
+  else { entry.reps = val; if(step.niveau.holdSec) entry.holdSec = step.niveau.holdSec; }
+  f.results.push(entry);
+  advanceStep();
+}
+
+/* ===================== AFSLUITSCHERM (scherm 3) ===================== */
+const FEEDBACK_OPTIES = [
+  {v:"te_makkelijk", label:"Te makkelijk"},
+  {v:"goed", label:"Goed"},
+  {v:"te_zwaar", label:"Te zwaar"},
+  {v:"niet_lekker", label:"Voelde niet lekker"}
+];
+function raakteMax(oefeningId, results){
+  const entries = results.filter(r=>r.oefeningId===oefeningId);
+  if(entries.length===0) return false;
+  const {max, niveau} = doelBereik(oefeningId);
+  const isSeconden = niveau.doelType==="seconden";
+  return entries.every(e => isSeconden ? (e.seconden>=max) : (e.reps>=max));
+}
+function renderAfsluiten(){
+  const a = ui.afsluit;
+  if(!a) return "";
+  if(!a.confirmed) return renderAfsluitenFeedback(a);
+  return renderAfsluitenSamenvatting(a);
+}
+function renderAfsluitenFeedback(a){
+  const oefeningIds = Object.keys(a.feedback);
+  return `<div class="screen">
+    <p class="muted">Alles staat op "goed". Tik alleen aan wat afweek.</p>
+    ${oefeningIds.map(id=>{
+      const oef = getOefening(id);
+      return `<div class="card">
+        <div style="font-weight:700;margin-bottom:6px">${escapeHtml(oef.naam)}</div>
+        <div class="feedback-grid">
+          ${FEEDBACK_OPTIES.map(o=>{
+            const active = a.feedback[id]===o.v;
+            let cls = active ? "active" : "";
+            if(active && o.v==="te_zwaar") cls += " warn-sel";
+            if(active && o.v==="niet_lekker") cls += " danger-sel";
+            return `<button class="${cls}" data-action="fb-set" data-oefening="${id}" data-val="${o.v}">${o.label}</button>`;
+          }).join("")}
+        </div>
+      </div>`;
+    }).join("")}
+    <button class="btn btn-primary btn-block btn-huge" data-action="fb-confirm">Bevestigen</button>
+  </div>`;
+}
+function feedbackLabel(v){ return (FEEDBACK_OPTIES.find(o=>o.v===v)||{}).label || v; }
+function confirmSession(){
+  const a = ui.afsluit;
+  a.voortgangSnapshot = JSON.parse(JSON.stringify(state.voortgang));
+  const session = {
+    datum: isoDate(new Date()),
+    workoutId: a.workoutId,
+    sets: a.results.map(r=>({oefeningId:r.oefeningId, set:r.set, niveau:r.niveau, kant:r.kant, reps:r.reps, holdSec:r.holdSec, seconden:r.seconden})),
+    feedback: Object.entries(a.feedback).map(([oefeningId,score])=>({oefeningId,score})),
+    duurMin: a.durMin
+  };
+  state.log.sessies.push(session);
+  const suggesties = [];
+  Object.keys(a.feedback).forEach(id=>{
+    const vg = ensureVoortgang(id);
+    const oef = getOefening(id);
+    const fb = a.feedback[id];
+    const hitMax = raakteMax(id, a.results);
+    if(hitMax && fb!=="te_zwaar" && fb!=="niet_lekker") vg.promotieTeller++; else vg.promotieTeller=0;
+    if(fb==="te_zwaar") vg.zwaarTeller++; else vg.zwaarTeller=0;
+    if(fb==="niet_lekker") vg.nietLekkerTeller++; else vg.nietLekkerTeller=0;
+    if(vg.nietLekkerTeller>=2) vg.vervangingsmarkering=true;
+    const volgendNiveau = oef.niveaus.find(n=>n.n===vg.niveau+1);
+    if(vg.promotieTeller>=2 && volgendNiveau){
+      suggesties.push({id:"promo-"+id, oefeningId:id, type:"promotie", naarNiveau:volgendNiveau});
+    }
+    if(vg.zwaarTeller>=2){
+      suggesties.push({id:"degrad-"+id, oefeningId:id, type:"degradatie"});
+    }
+  });
+  a.confirmed = true;
+  a.suggesties = suggesties;
+  render();
+}
+function resolveSuggestie(suggestieId, actie){
+  const a = ui.afsluit;
+  const s = a.suggesties.find(x=>x.id===suggestieId);
+  if(!s) return;
+  const vg = ensureVoortgang(s.oefeningId);
+  if(s.type==="promotie"){
+    if(actie==="bevestig") vg.niveau = s.naarNiveau.n;
+    vg.promotieTeller = 0;
+  } else if(s.type==="degradatie"){
+    if(actie==="niveau-omlaag") { vg.niveau = Math.max(1, vg.niveau-1); vg.rangeAdjust=0; }
+    else if(actie==="bereik-verlagen") { vg.rangeAdjust -= 1; }
+    vg.zwaarTeller = 0;
+  }
+  a.suggesties = a.suggesties.filter(x=>x.id!==suggestieId);
+  render();
+}
+function renderAfsluitenSamenvatting(a){
+  const totalSets = a.results.length;
+  return `<div class="screen">
+    <div class="card center">
+      <h2>Sessie voltooid</h2>
+      <p class="muted">${totalSets} sets gelogd · ${a.durMin} min</p>
+    </div>
+    ${a.suggesties.length>0 ? a.suggesties.map(s=>renderSuggestieCard(s)).join("") : ""}
+    ${a.suggesties.length===0 ? `<p class="muted center">Geen promotie- of aanpassingsvoorstellen deze keer.</p>` : ""}
+    <button class="btn btn-primary btn-block btn-huge" data-action="afsluiten-klaar" style="margin-top:10px" ${a.suggesties.length>0?"disabled":""}>Klaar</button>
+    ${a.suggesties.length>0 ? `<p class="fine center" style="margin-top:8px">Verwerk eerst de voorstellen hierboven.</p>`:""}
+    <button class="btn btn-ghost btn-block" data-action="undo-session" style="margin-top:10px">Niet meetellen (testen of oefenen)</button>
+    <p class="fine center" style="margin-top:4px">Haalt deze sessie weer uit je log en zet niveaus/tellers terug — handig als je net aan het testen of oefenen was.</p>
+  </div>`;
+}
+function undoSession(){
+  const a = ui.afsluit;
+  if(a.voortgangSnapshot) state.voortgang = a.voortgangSnapshot;
+  state.log.sessies.pop();
+  ui.afsluit = null;
+  goto("vandaag");
+}
+function renderSuggestieCard(s){
+  const oef = getOefening(s.oefeningId);
+  if(s.type==="promotie"){
+    return `<div class="card">
+      <div class="badge" style="margin-bottom:8px">Promotievoorstel</div>
+      <p>${escapeHtml(oef.naam)}: twee keer op rij het maximum gehaald. Door naar <b>${escapeHtml(s.naarNiveau.naam)}</b> (niveau ${s.naarNiveau.n})?</p>
+      <div class="row">
+        <button class="btn btn-primary" data-action="sugg" data-id="${s.id}" data-actie="bevestig">Bevestigen</button>
+        <button class="btn btn-ghost" data-action="sugg" data-id="${s.id}" data-actie="weiger">Weigeren</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="card">
+    <div class="badge warn" style="margin-bottom:8px">Aanpassingsvoorstel</div>
+    <p>${escapeHtml(oef.naam)}: twee keer op rij "te zwaar". Niveau terug, of doelbereik verlagen?</p>
+    <div class="row wrap">
+      <button class="btn btn-primary" data-action="sugg" data-id="${s.id}" data-actie="niveau-omlaag">Niveau omlaag</button>
+      <button class="btn" data-action="sugg" data-id="${s.id}" data-actie="bereik-verlagen">Bereik verlagen</button>
+      <button class="btn btn-ghost" data-action="sugg" data-id="${s.id}" data-actie="negeer">Negeren</button>
+    </div>
+  </div>`;
+}
+
+/* ===================== OEFENINGDETAIL (scherm 4) ===================== */
+function renderDetailModal(oefeningId){
+  const oef = getOefening(oefeningId);
+  if(!oef) return "";
+  const u = oef.uitleg;
+  const niveau = huidigNiveau(oefeningId);
+  return `<div class="modal-overlay" data-overlay="detail">
+    <div class="modal">
+      <div class="space-between">
+        <h2 style="margin-bottom:0">${escapeHtml(oef.naam)}</h2>
+        <button class="icon-btn" data-action="close-detail" aria-label="Sluiten">✕</button>
+      </div>
+      <p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
+      <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
+      <p>${escapeHtml(u.kort)}</p>
+      <a class="btn btn-block" style="margin-bottom:10px;text-decoration:none" href="https://www.youtube.com/results?search_query=${encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie")}" target="_blank" rel="noopener">Bekijk uitlegvideo's (YouTube, opent extern)</a>
+      <p class="fine" style="margin-top:-6px;margin-bottom:14px">De animatie hierboven is een geheugensteuntje, geen complete instructie. Bekijk bij een oefening die je nog nooit deed sowieso een video van een expert voordat je begint.</p>
+      <details open>
+        <summary>Uitvoering stap voor stap</summary>
+        <ol>${u.uitvoering.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}</ol>
+      </details>
+      <details>
+        <summary>Veelgemaakte fouten</summary>
+        <ul>${u.fouten.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}</ul>
+      </details>
+      <details>
+        <summary>Welke spieren</summary>
+        <ul>${u.spieren.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}</ul>
+      </details>
+      <details>
+        <summary>Wanneer stoppen</summary>
+        <p style="margin:0">${escapeHtml(u.stoppen)}</p>
+      </details>
+      <button class="btn btn-block" data-action="close-detail" style="margin-top:6px">Sluiten</button>
+    </div>
+  </div>`;
+}
+
+/* ===================== VOORTGANG (scherm 5) ===================== */
+function sessieWaarde(session, oefeningId){
+  const entries = session.sets.filter(s=>s.oefeningId===oefeningId);
+  if(entries.length===0) return null;
+  const oef = getOefening(oefeningId);
+  const niveau = getNiveau(oef, entries[0].niveau);
+  if(niveau.doelType==="seconden"){
+    const vals = entries.map(e=>e.seconden||0);
+    return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  }
+  const vals = entries.map(e=>e.reps||0);
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+}
+function renderVoortgang(){
+  return `<div class="screen">
+    <div class="tabbar">
+      <button class="${ui.voortgangTab==='oefeningen'?'active':''}" data-action="voortgang-tab" data-tab="oefeningen">Oefeningen</button>
+      <button class="${ui.voortgangTab==='gewicht'?'active':''}" data-action="voortgang-tab" data-tab="gewicht">Gewicht</button>
+    </div>
+    ${ui.voortgangTab==="oefeningen" ? renderVoortgangOefeningen() : renderVoortgangGewicht()}
+  </div>`;
+}
+function renderVoortgangOefeningen(){
+  return state.programma.oefeningen.map(oef=>{
+    const vg = state.voortgang[oef.id];
+    const niveau = getNiveau(oef, vg.niveau);
+    const sessies = state.log.sessies.filter(s=>s.sets.some(st=>st.oefeningId===oef.id)).slice(-10);
+    const waarden = sessies.map(s=>sessieWaarde(s,oef.id)).filter(v=>v!==null);
+    const maxWaarde = Math.max(niveau.max, ...waarden, 1);
+    return `<div class="card">
+      <div class="space-between">
+        <div>
+          <div style="font-weight:700">${escapeHtml(oef.naam)}</div>
+          <div class="muted small">Niveau ${niveau.n} — ${escapeHtml(niveau.naam)}${vg.vervangingsmarkering?' · gemarkeerd voor vervanging':''}</div>
+        </div>
+        <button class="icon-btn" data-action="open-uitleg" data-oefening="${oef.id}">i</button>
+      </div>
+      ${waarden.length>0 ? `<div class="bar-chart">${waarden.map(v=>`<div class="bar" style="height:${Math.max(4,Math.round(v/maxWaarde*100))}%"><span class="lbl">${v}</span></div>`).join("")}</div>` : `<p class="muted small">Nog geen sessies gelogd.</p>`}
+    </div>`;
+  }).join("");
+}
+function renderVoortgangGewicht(){
+  const rows = state.log.gewicht;
+  const vals = rows.map(r=>r.kg);
+  const min = vals.length? Math.min(...vals):0, max = vals.length? Math.max(...vals):1;
+  const w=300,h=110;
+  let poly = "";
+  if(rows.length>1){
+    const pts = rows.map((r,i)=>{
+      const x = rows.length>1 ? (i/(rows.length-1))*w : 0;
+      const y = max===min ? h/2 : h - ((r.kg-min)/(max-min))*h;
+      return `${x},${y}`;
+    });
+    poly = `<polyline points="${pts.join(" ")}" fill="none" stroke="var(--primary)" stroke-width="3"/>`;
+  }
+  return `<div class="card">
+    <div class="field">
+      <label for="gewicht-kg">Gewicht (kg)</label>
+      <input type="number" step="0.1" id="gewicht-kg" placeholder="bijv. 80.5">
+    </div>
+    <button class="btn btn-primary btn-block" data-action="gewicht-toevoegen">Toevoegen</button>
+  </div>
+  ${rows.length>1 ? `<div class="card"><svg viewBox="0 0 ${w} ${h}" style="width:100%;height:120px">${poly}</svg></div>` : ""}
+  <div class="card">
+    ${rows.length===0 ? `<p class="muted">Nog geen gewicht gelogd.</p>` : rows.slice().reverse().map(r=>`<div class="list-row"><span>${fmtDatumKort(r.datum)}</span><span>${r.kg} kg</span></div>`).join("")}
+  </div>`;
+}
+
+/* ===================== BLOKREVIEW (scherm 6) ===================== */
+function renderBlokreview(){
+  const br = ui.blokreview || (ui.blokreview = {
+    perOefening: Object.fromEntries(state.programma.oefeningen.map(o=>[o.id,{gevoel:"goed",opmerking:""}])),
+    algemeen:""
+  });
+  return `<div class="screen">
+    <div class="card">
+      <h2>Blok ${state.programma.blok} afgerond</h2>
+      <p class="muted">Geef per oefening je algemene gevoel over dit blok, plus een optionele opmerking.</p>
+    </div>
+    ${state.programma.oefeningen.map(oef=>{
+      const row = br.perOefening[oef.id];
+      return `<div class="card">
+        <div style="font-weight:700;margin-bottom:6px">${escapeHtml(oef.naam)}</div>
+        <div class="feedback-grid">
+          ${FEEDBACK_OPTIES.map(o=>`<button class="${row.gevoel===o.v?'active':''}" data-action="br-gevoel" data-oefening="${oef.id}" data-val="${o.v}">${o.label}</button>`).join("")}
+        </div>
+        <div class="field" style="margin-top:10px;margin-bottom:0">
+          <textarea data-bind-br="${oef.id}" placeholder="Opmerking (optioneel)">${escapeHtml(row.opmerking)}</textarea>
+        </div>
+      </div>`;
+    }).join("")}
+    <div class="card">
+      <div class="field" style="margin-bottom:0">
+        <label>Algemene opmerking</label>
+        <textarea id="br-algemeen" placeholder="Hoe ging het blok in het algemeen?">${escapeHtml(br.algemeen)}</textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block btn-huge" data-action="br-confirm">Bevestigen en naar export</button>
+  </div>`;
+}
+
+/* ===================== INSTELLINGEN (scherm 7) ===================== */
+function renderInstellingen(){
+  const i = state.instellingen;
+  return `<div class="screen">
+    <div class="card">
+      <div class="field">
+        <label>Trainingsdag</label>
+        <div class="daypicker">
+          ${[1,2,3,4,5,6,0].map(d=>`<button data-action="set-trainingsdag" data-dag="${d}" class="${i.trainingsdag===d?'active':''}">${DAGNAMEN[d]}</button>`).join("")}
+        </div>
+        <p class="fine">Tip: kies bij voorkeur niet de dag vóór een hockeywedstrijd.</p>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-weight:600">Reminder</div>
+          <div class="fine">Notificatie op de trainingsdag, best effort — zie toelichting onderaan.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="set-reminder" ${i.reminder?"checked":""}><span class="track"></span><span class="thumb"></span></label>
+      </div>
+      <div class="field">
+        <label for="set-reminder-tijd">Reminder-tijd</label>
+        <input type="time" id="set-reminder-tijd" value="${escapeHtml(i.reminderTijd)}">
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-weight:600">Seizoensmodus</div>
+          <div class="fine">Aan: 1 hoofdworkout per week is de norm. Uit: hoofdworkout + 1 micro-workout.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="set-seizoen" ${i.seizoen?"checked":""}><span class="track"></span><span class="thumb"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-weight:600">Automatisch doorlopen tijdens workout</div>
+          <div class="fine">Holds en timed oefeningen starten en loggen zichzelf, zodat je je telefoon niet hoeft aan te raken. Losse reps (squat, push-up, row, glute bridge, dead bug) vragen altijd nog één tik om de set af te vinken.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="set-autorun" ${i.autoRun?"checked":""}><span class="track"></span><span class="thumb"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-weight:600">Spraakbegeleiding</div>
+          <div class="fine">De telefoon spreekt oefening, doel, aftellen en "klaar" uit, zodat je niet op het scherm hoeft te kijken. Gebruikt automatisch de beste Nederlandse stem die je toestel beschikbaar heeft (bij voorkeur een netwerkstem — die klinkt natuurlijker dan de standaard offline device-stem).</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="set-spraak" ${i.spraak?"checked":""}><span class="track"></span><span class="thumb"></span></label>
+      </div>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:14px">
+        <p class="fine" style="margin:0">${ttsVoice ? `Gevonden stem: ${escapeHtml(ttsVoice.name)} (${ttsVoice.localService?"lokaal":"netwerk"})` : "Nog geen Nederlandse stem gevonden op dit toestel — standaardstem wordt gebruikt."}</p>
+        <button class="btn btn-sm" data-action="test-stem">Test stem</button>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label for="set-lengte">Lengte in cm</label>
+        <input type="number" id="set-lengte" value="${i.lengteCm||""}" placeholder="optioneel">
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:8px">Back-up</h3>
+      <p class="muted small">Laatste export: ${i.laatsteExport ? fmtDatumKort(i.laatsteExport) : "nog niet gemaakt"}.</p>
+      <button class="btn btn-block" data-action="ga-export">Export &amp; import</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:8px">Veiligheid</h3>
+      <p class="small">${disclaimerTekst()}</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:8px">Over de reminder</h3>
+      <p class="small">Een browser-app kan op Android geen notificatie op een gegarandeerd exact tijdstip afleveren zonder server. Deze reminder is best effort en werkt het betrouwbaarst als je de app als PWA hebt geïnstalleerd. Zet voor de zekerheid ook een alarm of agenda-item op je trainingsdag.</p>
+    </div>
+  </div>`;
+}
+
+/* ===================== EXPORT & IMPORT (F7, punt 9) ===================== */
+const ANALYSE_PROMPT = `Hierbij de export van mijn workout-app (JSON). Analyseer mijn progressie en stel het volgende programmablok samen (4 tot 6 weken). Regels: houd de McGill Big 3 als vaste kern; feedback "te makkelijk" versnelt progressie, "te zwaar" vertraagt, oefeningen met vervangingsmarkering of herhaald "voelde niet lekker" vervang je door een alternatief binnen hetzelfde bewegingspatroon; houd rekening met de seizoensinstelling; ik train thuis zonder materiaal, adviseer alleen bij duidelijke meerwaarde een aanschaf (zoals een weerstandsband) en vraag dat eerst. Onderbouw je keuzes kort. Lever daarna het nieuwe blok als één JSON-codeblok met exact deze structuur: { "schemaVersion": 1, "programma": { ... } }, inclusief volledige Nederlandse uitlegteksten per oefening (kort, uitvoering, fouten, spieren, stoppen) en startNiveau per oefening. Nieuwe oefeningen krijgen "animatie": null; die voeg ik later toe.`;
+function renderExport(){
+  return `<div class="screen">
+    ${state.programma.blokreviewGedaan ? `<div class="banner" style="background:var(--primary-dim);color:var(--primary)">Blok afgerond. Exporteer je data en gebruik de prompt hieronder om je volgende blok te laten samenstellen.</div>` : ""}
+    <div class="card">
+      <h3>Exporteren</h3>
+      <p class="muted small">Downloadt één JSON-bestand met je volledige data: programma, voortgang, instellingen en log.</p>
+      <button class="btn btn-primary btn-block" data-action="do-export">Exporteer JSON</button>
+    </div>
+    <div class="card">
+      <h3>Analyse-prompt</h3>
+      <p class="muted small">Plak deze tekst samen met het geëxporteerde bestand in een Claude-chat om je volgende blok te laten samenstellen.</p>
+      <div class="copybox">${escapeHtml(ANALYSE_PROMPT)}</div>
+      <button class="btn btn-block" data-action="copy-prompt">Kopieer prompt</button>
+    </div>
+    <div class="card">
+      <h3>Importeren</h3>
+      <p class="muted small">Kies een programmabestand (nieuw blok) of een volledig back-upbestand.</p>
+      <input type="file" id="import-file" accept="application/json,.json" style="margin-bottom:10px">
+      <button class="btn btn-block" data-action="do-import">Importeer bestand</button>
+      ${ui.importError ? `<p class="small" style="color:var(--danger);margin-top:8px">${escapeHtml(ui.importError)}</p>` : ""}
+      ${ui.importOk ? `<p class="small" style="color:var(--primary);margin-top:8px">Import gelukt.</p>` : ""}
+    </div>
+  </div>`;
+}
+function doExport(){
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `kernkracht-export-${isoDate(new Date())}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  state.instellingen.laatsteExport = isoDate(new Date());
+  render();
+}
+function validateProgramma(p){
+  if(!p || typeof p!=="object") return "Bestand mist een programma-object.";
+  if(!Array.isArray(p.workouts) || !Array.isArray(p.oefeningen)) return "Programma mist workouts of oefeningen.";
+  if(p.oefeningen.length===0) return "Programma bevat geen oefeningen.";
+  for(const o of p.oefeningen){
+    if(!o.id || !o.naam || !Array.isArray(o.niveaus) || o.niveaus.length===0) return `Oefening "${o.id||'?'}" is onvolledig.`;
+    if(!o.uitleg || typeof o.uitleg.kort!=="string") return `Oefening "${o.id}" mist uitlegtekst.`;
+  }
+  for(const w of p.workouts){
+    if(!w.id || !Array.isArray(w.oefeningen)) return `Workout "${w.id||'?'}" is onvolledig.`;
+    for(const wo of w.oefeningen){
+      if(!p.oefeningen.some(o=>o.id===wo.oefeningId)) return `Workout "${w.id}" verwijst naar onbekende oefening "${wo.oefeningId}".`;
+    }
+  }
+  if(!p.startDatum || !p.duurWeken) return "Programma mist startDatum of duurWeken.";
+  return null;
+}
+function doImport(){
+  ui.importError = null; ui.importOk = false;
+  const input = document.getElementById("import-file");
+  const file = input && input.files && input.files[0];
+  if(!file){ ui.importError = "Kies eerst een bestand."; render(); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    let obj;
+    try{ obj = JSON.parse(reader.result); }
+    catch(e){ ui.importError = "Dit is geen geldig JSON-bestand."; render(); return; }
+    if(!obj || obj.schemaVersion!==1){ ui.importError = "Onbekend of ontbrekend schemaVersion — dit bestand hoort niet bij Kernkracht."; render(); return; }
+    const err = validateProgramma(obj.programma);
+    if(err){ ui.importError = "Ongeldig bestand: " + err; render(); return; }
+    const isFullState = ("voortgang" in obj) && ("instellingen" in obj) && ("log" in obj);
+    if(isFullState){
+      state = obj;
+      if(!state.voortgang) state.voortgang = defaultVoortgang(state.programma);
+    } else {
+      state.schemaVersion = obj.schemaVersion;
+      state.programma = obj.programma;
+      if(typeof state.programma.verschovenDagen!=="number") state.programma.verschovenDagen = 0;
+      if(typeof state.programma.blokreviewGedaan!=="boolean") state.programma.blokreviewGedaan = false;
+      const newVoortgang = {};
+      state.programma.oefeningen.forEach(oef=>{
+        const niveau = oef.startNiveau || 1;
+        newVoortgang[oef.id] = {niveau, promotieTeller:0, zwaarTeller:0, nietLekkerTeller:0, vervangingsmarkering:false, rangeAdjust:0, geintroduceerd:false};
+      });
+      state.voortgang = newVoortgang;
+    }
+    ui.importOk = true;
+    ui.screen = "vandaag";
+    render();
+  };
+  reader.onerror = () => { ui.importError = "Bestand kon niet worden gelezen."; render(); };
+  reader.readAsText(file);
+}
+function copyPrompt(){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ANALYSE_PROMPT).catch(()=>{});
+  }
+}
+
+/* ===================== REMINDER (F6, best effort) ===================== */
+function checkReminder(){
+  const i = state.instellingen;
+  if(!i.reminder || !("Notification" in window) || Notification.permission!=="granted") return;
+  const now = new Date();
+  if(now.getDay()!==i.trainingsdag) return;
+  const [hh,mm] = (i.reminderTijd||"20:00").split(":").map(Number);
+  const target = new Date(); target.setHours(hh,mm,0,0);
+  if(now < target) return;
+  const lastKey = "kernkracht_reminder_lastdate";
+  if(localStorage.getItem(lastKey) === isoDate(now)) return;
+  try{
+    new Notification("Tijd om te trainen", {body:"Vandaag staat je workout gepland.", icon:undefined});
+    localStorage.setItem(lastKey, isoDate(now));
+  }catch(e){}
+}
+
+/* ===================== EVENT WIRING ===================== */
+function onAction(e){
+  const el = e.currentTarget;
+  const action = el.dataset.action;
+  switch(action){
+    case "ga-vandaag": goto("vandaag"); break;
+    case "ga-instellingen": goto("instellingen"); break;
+    case "ga-voortgang": goto("voortgang"); break;
+    case "ga-export": ui.importError=null; ui.importOk=false; goto("export"); break;
+    case "ob-dag": ui.onboarding.trainingsdag = Number(el.dataset.dag); render(); break;
+    case "ob-start": completeOnboarding(); break;
+    case "disclaimer-akkoord": state.instellingen.disclaimerGezien = true; render(); break;
+    case "open-microkeuze": ui.microKeuzeOpen = true; render(); break;
+    case "close-microkeuze": ui.microKeuzeOpen = false; render(); break;
+    case "start-workout": ui.microKeuzeOpen = false; startWorkout(el.dataset.workout); break;
+    case "week-overslaan": weekOverslaan(); break;
+    case "warmup-klaar": ui.flow.warmup = false; render(); break;
+    case "stop-workout": if(confirm("Workout afbreken? Voortgang van deze sessie gaat verloren.")){ clearTimers(); ui.flow=null; goto("vandaag"); } break;
+    case "open-uitleg": ui.detailOefeningId = el.dataset.oefening; render(); break;
+    case "close-detail": ui.detailOefeningId = null; render(); break;
+    case "val-min": ui.flow.inputVal = Math.max(0, ui.flow.inputVal-1); render(); break;
+    case "val-plus": ui.flow.inputVal = ui.flow.inputVal+1; render(); break;
+    case "log-set": logCurrentSet(); break;
+    case "sec-start": secStart(); break;
+    case "sec-stop": secStop(); break;
+    case "sec-reset": secReset(); break;
+    case "hold-start": holdStart(); break;
+    case "rest-skip": clearTimers(); ui.flow.restTotal=0; ui.flow.restRemaining=0; advanceStep(); break;
+    case "toggle-autorun": ui.flow.autoRun = !ui.flow.autoRun; render(); break;
+    case "toggle-spraak": state.instellingen.spraak = !state.instellingen.spraak; if(!state.instellingen.spraak && "speechSynthesis" in window) speechSynthesis.cancel(); render(); break;
+    case "auto-stop": stopAuto(); break;
+    case "fb-set": ui.afsluit.feedback[el.dataset.oefening] = el.dataset.val; render(); break;
+    case "fb-confirm": confirmSession(); break;
+    case "sugg": resolveSuggestie(el.dataset.id, el.dataset.actie); break;
+    case "afsluiten-klaar": ui.afsluit = null; goto("vandaag"); break;
+    case "undo-session": undoSession(); break;
+    case "voortgang-tab": ui.voortgangTab = el.dataset.tab; render(); break;
+    case "gewicht-toevoegen": voegGewichtToe(); break;
+    case "br-gevoel": ui.blokreview.perOefening[el.dataset.oefening].gevoel = el.dataset.val; render(); break;
+    case "br-confirm": confirmBlokreview(); break;
+    case "set-trainingsdag": state.instellingen.trainingsdag = Number(el.dataset.dag); render(); break;
+    case "test-stem": speakTest(); break;
+    case "do-export": doExport(); break;
+    case "do-import": doImport(); break;
+    case "copy-prompt": copyPrompt(); break;
+  }
+}
+function completeOnboarding(){
+  const ob = ui.onboarding;
+  state.programma.startDatum = isoDate(nextDateForWeekday(ob.trainingsdag));
+  state.programma.naam = ob.naam || "Blok 1";
+  state.instellingen.trainingsdag = ob.trainingsdag;
+  state.instellingen.seizoen = !!ob.seizoen;
+  state.instellingen.lengteCm = ob.lengteCm ? parseFloat(ob.lengteCm) : null;
+  state.instellingen.disclaimerGezien = true;
+  state.onboarded = true;
+  ui.onboarding = null;
+  goto("vandaag");
+}
+function weekOverslaan(){
+  const wi = weekInfo();
+  state.log.overgeslagenWeken.push({datum:isoDate(new Date()), weekNummer:wi.weekNummer});
+  state.programma.verschovenDagen = (state.programma.verschovenDagen||0) + 7;
+  render();
+}
+function voegGewichtToe(){
+  const input = document.getElementById("gewicht-kg");
+  const kg = parseFloat(input && input.value);
+  if(!kg || kg<=0) return;
+  state.log.gewicht.push({datum:isoDate(new Date()), kg});
+  render();
+}
+function confirmBlokreview(){
+  const br = ui.blokreview;
+  state.log.blokreviews.push({
+    blok: state.programma.blok,
+    datum: isoDate(new Date()),
+    perOefening: Object.entries(br.perOefening).map(([oefeningId,v])=>({oefeningId, gevoel:v.gevoel, opmerking:v.opmerking})),
+    algemeen: br.algemeen
+  });
+  state.programma.blokreviewGedaan = true;
+  ui.blokreview = null;
+  ui.screen = "export";
+  render();
+}
+function wireBoundInputs(){
+  const bindText = (id, setter) => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("input", () => setter(el.value));
+  };
+  if(ui.onboarding){
+    bindText("ob-naam", v=>ui.onboarding.naam=v);
+    bindText("ob-lengte", v=>ui.onboarding.lengteCm=v);
+    const seizoen = document.getElementById("ob-seizoen");
+    if(seizoen) seizoen.addEventListener("change", ()=>{ ui.onboarding.seizoen = seizoen.checked; });
+    const akkoord = document.getElementById("ob-akkoord");
+    if(akkoord) akkoord.addEventListener("change", ()=>{ ui.onboarding.akkoord = akkoord.checked; render(); });
+  }
+  const setReminder = document.getElementById("set-reminder");
+  if(setReminder) setReminder.addEventListener("change", ()=>{
+    state.instellingen.reminder = setReminder.checked;
+    if(setReminder.checked && "Notification" in window && Notification.permission==="default"){
+      Notification.requestPermission();
+    }
+    render();
+  });
+  bindText("set-reminder-tijd", v=>state.instellingen.reminderTijd=v);
+  const setSeizoen = document.getElementById("set-seizoen");
+  if(setSeizoen) setSeizoen.addEventListener("change", ()=>{ state.instellingen.seizoen = setSeizoen.checked; render(); });
+  const setAutorun = document.getElementById("set-autorun");
+  if(setAutorun) setAutorun.addEventListener("change", ()=>{ state.instellingen.autoRun = setAutorun.checked; render(); });
+  const setSpraak = document.getElementById("set-spraak");
+  if(setSpraak) setSpraak.addEventListener("change", ()=>{ state.instellingen.spraak = setSpraak.checked; if(!setSpraak.checked && "speechSynthesis" in window) speechSynthesis.cancel(); render(); });
+  bindText("set-lengte", v=>state.instellingen.lengteCm = v?parseFloat(v):null);
+  if(ui.blokreview){
+    document.querySelectorAll("[data-bind-br]").forEach(el=>{
+      el.addEventListener("input", ()=>{ ui.blokreview.perOefening[el.dataset.bindBr].opmerking = el.value; });
+    });
+    bindText("br-algemeen", v=>ui.blokreview.algemeen=v);
+  }
+  document.querySelectorAll(".modal-overlay").forEach(ov=>{
+    ov.addEventListener("click", (e)=>{
+      if(e.target !== ov) return;
+      const which = ov.dataset.overlay;
+      if(which==="detail") ui.detailOefeningId = null;
+      else if(which==="microkeuze") ui.microKeuzeOpen = false;
+      else return;
+      render();
+    });
+  });
+}
+function wireCommon(){
+  APP_EL.querySelectorAll("[data-action]").forEach(el=>{
+    el.addEventListener("click", onAction);
+  });
+  wireBoundInputs();
+}
+
+/* ===================== INIT ===================== */
+render();
+setInterval(checkReminder, 60000);
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) checkReminder(); });
+checkReminder();
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
