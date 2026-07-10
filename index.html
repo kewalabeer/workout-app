@@ -80,7 +80,7 @@ input,select{font:inherit;}
 }
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
 .field label{font-size:13px;font-weight:600;color:var(--muted);}
-.field input[type=text],.field input[type=number],.field input[type=time],.field input[type=date],.field textarea{
+.field input[type=text],.field input[type=password],.field input[type=number],.field input[type=time],.field input[type=date],.field select,.field textarea{
   min-height:48px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card2);
   color:var(--text);padding:10px 12px;width:100%;
 }
@@ -177,7 +177,7 @@ a{color:var(--primary);}
 /* ===================== DATA: programma blok 1 ===================== */
 const OEFENINGEN = [
   {
-    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", animatie:"curlup",
+    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", animatie:"curlup", video:"https://www.youtube.com/watch?v=_tz9WGVH25g",
     niveaus:[
       {n:1,naam:"Basis",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
       {n:2,naam:"Ellebogen los van de vloer",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
@@ -199,7 +199,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", animatie:"sideplank",
+    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", animatie:"sideplank", video:"https://www.youtube.com/watch?v=rCxF2nG9vQ0",
     niveaus:[
       {n:1,naam:"Vanaf de knieën",doelType:"seconden",min:10,max:20,perKant:true},
       {n:2,naam:"Vanaf de knieën, langer",doelType:"seconden",min:20,max:35,perKant:true},
@@ -220,7 +220,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", animatie:"birddog",
+    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", animatie:"birddog", video:"https://www.youtube.com/watch?v=ZdAHe9_HeEw",
     niveaus:[
       {n:1,naam:"Alleen arm óf been strekken",doelType:"reps",min:6,max:10,holdSec:null,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:5,max:8,holdSec:3,perKant:true},
@@ -242,7 +242,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"squat", naam:"Squat", patroon:"squat", animatie:"squat",
+    id:"squat", naam:"Squat", patroon:"squat", animatie:"squat", video:"https://www.youtube.com/watch?v=DlS-GAF8Edg",
     niveaus:[
       {n:1,naam:"Box squat naar stoel",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Vrije squat tot dijen horizontaal",doelType:"reps",min:8,max:12,perKant:false},
@@ -263,7 +263,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"pushup", naam:"Push-up progressie", patroon:"push", animatie:"pushup",
+    id:"pushup", naam:"Push-up progressie", patroon:"push", animatie:"pushup", video:"https://www.youtube.com/watch?v=tf3VNkmzHq0",
     niveaus:[
       {n:1,naam:"Tegen de muur",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Handen op aanrecht of tafel",doelType:"reps",min:8,max:12,perKant:false},
@@ -284,29 +284,28 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"row", naam:"Row progressie", patroon:"pull", animatie:"row",
+    id:"row", naam:"Band row", patroon:"pull", animatie:"row", video:"https://www.youtube.com/watch?v=db43OS-4ruY",
     niveaus:[
-      {n:1,naam:"Table row, knieën gebogen",doelType:"reps",min:8,max:12,perKant:false},
-      {n:2,naam:"Towel row aan deurklinken",doelType:"reps",min:8,max:12,perKant:false},
-      {n:3,naam:"Table row gestrekte benen of towel row dieper",doelType:"reps",min:8,max:12,perKant:false}
+      {n:1,naam:"Ruime speling in de band",doelType:"reps",min:8,max:12,perKant:false},
+      {n:2,naam:"Band korter gepakt, meer spanning",doelType:"reps",min:8,max:12,perKant:false},
+      {n:3,naam:"Trage, gecontroleerde terugbeweging",doelType:"reps",min:8,max:10,perKant:false}
     ],
     uitleg:{
-      kort:"Hang achterover en trek je borst naar de tafel of deur, schouderbladen naar elkaar.",
+      kort:"Trek de weerstandsband naar je toe, ellebogen naar achteren, schouderbladen naar elkaar.",
       uitvoering:[
-        "Table row: ga onder een stevige tafel liggen en pak de rand vast.",
-        "Trek je borst naar de tafelrand en knijp je schouderbladen naar elkaar.",
-        "Zak gecontroleerd terug.",
-        "Towel row: sla een stevige handdoek om beide klinken van een geopende deur, zet je voeten bij de deur en hang met gestrekte armen achterover.",
-        "Trek je borst naar de deur.",
-        "Test tafel, deur en handdoek eerst voorzichtig met weinig gewicht."
+        "Maak de weerstandsband vast op ongeveer borsthoogte, bijvoorbeeld om een deurklink of scharnier aan de andere kant van een dichte deur.",
+        "Ga rechtop staan, een stap bij het ankerpunt vandaan, en pak de band met beide handen vast met je armen gestrekt naar voren.",
+        "Trek je ellebogen naar achteren langs je lichaam en knijp je schouderbladen naar elkaar.",
+        "Laat de band gecontroleerd weer naar voren komen tot je armen weer gestrekt zijn.",
+        "Niveau 1: ga verder van het ankerpunt staan zodat er veel speling in de band zit. Niveau 2: kom dichterbij of pak de band korter zodat er eerder spanning op staat."
       ],
-      fouten:["Schouders optrekken","Alleen met de armen trekken zonder schouderbladen te bewegen","Heupen laten knikken"],
+      fouten:["Schouders optrekken naar je oren","Alleen met de armen trekken zonder schouderbladen te bewegen","Doorbuigen in de onderrug om de band te verplaatsen"],
       spieren:["Bovenrug","biceps","grip"],
-      stoppen:"Bij schouderpijn, of als het materiaal niet stabiel aanvoelt."
+      stoppen:"Bij schouderpijn, of als het ankerpunt niet stevig aanvoelt. Test dat altijd eerst voorzichtig."
     }
   },
   {
-    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", animatie:"glutebridge",
+    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", animatie:"glutebridge", video:"https://www.youtube.com/watch?v=nuapk_-Q2BI",
     niveaus:[
       {n:1,naam:"Tweebenig",doelType:"reps",min:10,max:15,perKant:false},
       {n:2,naam:"Met 3s hold bovenin",doelType:"reps",min:10,max:12,holdSec:3,perKant:false},
@@ -326,7 +325,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", animatie:"deadbug",
+    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", animatie:"deadbug", video:"https://www.youtube.com/watch?v=bxn9FBrt4-A",
     niveaus:[
       {n:1,naam:"Alleen benen",doelType:"reps",min:8,max:12,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:6,max:10,perKant:true},
@@ -346,7 +345,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", animatie:"frontplank",
+    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", animatie:"frontplank", video:"https://www.youtube.com/watch?v=A2b2EmIg0dA",
     niveaus:[
       {n:1,naam:"Op de knieën",doelType:"seconden",min:20,max:30,perKant:false},
       {n:2,naam:"Volledig",doelType:"seconden",min:20,max:35,perKant:false},
@@ -420,7 +419,7 @@ function defaultState(){
     onboarded:false,
     programma,
     voortgang: defaultVoortgang(programma),
-    instellingen:{trainingsdag:2, reminder:true, reminderTijd:"20:00", seizoen:true, lengteCm:null, laatsteExport:null, disclaimerGezien:false, autoRun:true, spraak:true},
+    instellingen:{trainingsdag:2, reminder:true, reminderTijd:"20:00", seizoen:true, lengteCm:null, laatsteExport:null, disclaimerGezien:false, autoRun:true, spraak:true, azureKey:null, azureRegion:null, azureVoice:"nl-NL-FennaNeural"},
     log:{sessies:[], gewicht:[], overgeslagenWeken:[], blokreviews:[]}
   };
 }
@@ -436,6 +435,9 @@ function loadState(){
     if(!parsed.voortgang) parsed.voortgang = defaultVoortgang(parsed.programma);
     if(typeof parsed.instellingen.autoRun!=="boolean") parsed.instellingen.autoRun = true;
     if(typeof parsed.instellingen.spraak!=="boolean") parsed.instellingen.spraak = true;
+    if(typeof parsed.instellingen.azureKey==="undefined") parsed.instellingen.azureKey = null;
+    if(typeof parsed.instellingen.azureRegion==="undefined") parsed.instellingen.azureRegion = null;
+    if(!parsed.instellingen.azureVoice) parsed.instellingen.azureVoice = "nl-NL-FennaNeural";
     return parsed;
   }catch(e){ return defaultState(); }
 }
@@ -523,51 +525,54 @@ function poseLines(pose){
   if(pose.knee2 && pose.foot2) out += seg(pose.knee2,pose.foot2);
   return out;
 }
+// Elke pose houdt de lengte van elk "bot" (schouder-elleboog, elleboog-hand, heup-knie, knie-voet)
+// gelijk tussen stand a en b — alleen de hoeken veranderen. Anders lijkt het of ledematen van lengte
+// veranderen tussen de standen, wat de belangrijkste reden was dat de vorige versie er niet klopte.
 const ANIMATIONS = {
   curlup:{
     context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[38,102],shoulder:[56,102],elbow:[70,106],hand:[88,109],hip:[100,105],knee:[132,90],foot:[150,110],knee2:[136,107],foot2:[172,108]},
-    b:{head:[44,90],shoulder:[62,94],elbow:[74,100],hand:[90,106],hip:[100,105],knee:[132,90],foot:[150,110],knee2:[136,107],foot2:[172,108]}
+    a:{head:[37,108],shoulder:[58,106],elbow:[72,108],hand:[88,110],hip:[100,108],knee:[85,85],foot:[100,115],knee2:[130,112],foot2:[165,116]},
+    b:{head:[38,97],shoulder:[60,97],elbow:[74,99],hand:[90,101],hip:[100,108],knee:[85,85],foot:[100,115],knee2:[130,112],foot2:[165,116]}
   },
   sideplank:{
     context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[52,72],shoulder:[68,78],elbow:[68,98],hand:[80,104],hip:[100,92],knee:[128,102],foot:[150,108]},
-    b:{head:[48,50],shoulder:[66,56],elbow:[68,98],hand:[80,104],hip:[100,60],knee:[128,65],foot:[150,70]}
+    a:{head:[55,75],shoulder:[70,80],elbow:[70,98],hand:[70,98],hip:[100,100],knee:[122,108],foot:[140,112]},
+    b:{head:[52,78],shoulder:[70,80],elbow:[70,98],hand:[70,98],hip:[104,78],knee:[128,76],foot:[150,74]}
   },
   birddog:{
     context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[58,58],shoulder:[80,62],elbow:[80,76],hand:[80,92],hip:[130,66],knee:[130,92],foot:[130,96]},
-    b:{head:[40,48],shoulder:[78,60],elbow:[62,48],hand:[46,42],hip:[130,66],knee:[158,72],foot:[178,80]}
+    a:{head:[58,55],shoulder:[75,60],elbow:[75,80],hand:[75,98],hip:[130,62],knee:[130,80],foot:[130,98]},
+    b:{head:[58,55],shoulder:[75,60],elbow:[56,53],hand:[39,47],hip:[130,62],knee:[147,56],foot:[164,50]}
   },
   squat:{
     context:'<line x1="15" y1="127" x2="195" y2="127" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[100,38],shoulder:[100,54],elbow:[92,72],hand:[86,88],hip:[100,80],knee:[100,104],foot:[100,125]},
-    b:{head:[92,72],shoulder:[92,86],elbow:[70,90],hand:[52,88],hip:[86,100],knee:[100,104],foot:[100,125]}
+    a:{head:[100,38],shoulder:[100,50],elbow:[94,64],hand:[88,76],hip:[100,75],knee:[100,100],foot:[100,125]},
+    b:{head:[73,88],shoulder:[80,98],elbow:[65,102],hand:[50,100],hip:[95,120],knee:[112,102],foot:[100,125]}
   },
   pushup:{
     context:'<line x1="40" y1="30" x2="40" y2="115" stroke="currentColor" stroke-opacity=".2" stroke-width="6"/>',
-    a:{head:[38,58],shoulder:[54,62],elbow:[52,88],hand:[58,110],hip:[118,68],knee:[150,72],foot:[172,74]},
-    b:{head:[42,78],shoulder:[54,82],elbow:[46,94],hand:[58,110],hip:[118,86],knee:[150,88],foot:[172,88]}
+    a:{head:[38,60],shoulder:[56,64],elbow:[54,88],hand:[58,110],hip:[118,70],knee:[150,73],foot:[172,76]},
+    b:{head:[40,86],shoulder:[58,90],elbow:[36,96],hand:[58,110],hip:[118,92],knee:[150,94],foot:[172,96]}
   },
   row:{
-    context:'<rect x="140" y="30" width="8" height="70" fill="currentColor" fill-opacity=".2"/>',
-    a:{head:[142,48],shoulder:[130,60],elbow:[142,48],hand:[148,38],hip:[92,90],knee:[76,104],foot:[58,120]},
-    b:{head:[122,44],shoulder:[113,54],elbow:[131,46],hand:[148,38],hip:[92,90],knee:[76,104],foot:[58,120]}
+    context:'<rect x="140" y="50" width="8" height="26" fill="currentColor" fill-opacity=".2"/>',
+    a:{head:[75,50],shoulder:[80,65],elbow:[110,68],hand:[138,64],hip:[75,95],knee:[72,110],foot:[70,125]},
+    b:{head:[75,50],shoulder:[80,65],elbow:[55,78],hand:[78,85],hip:[75,95],knee:[72,110],foot:[70,125]}
   },
   glutebridge:{
     context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[40,100],shoulder:[56,100],elbow:[62,92],hand:[74,90],hip:[92,106],knee:[122,90],foot:[132,110]},
-    b:{head:[40,100],shoulder:[56,97],elbow:[62,90],hand:[74,88],hip:[92,86],knee:[122,90],foot:[132,110]}
+    a:{head:[40,100],shoulder:[56,100],elbow:[62,94],hand:[74,92],hip:[90,108],knee:[120,92],foot:[130,112]},
+    b:{head:[40,100],shoulder:[56,100],elbow:[62,94],hand:[74,92],hip:[90,86],knee:[122,90],foot:[130,112]}
   },
   deadbug:{
     context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[70,96],shoulder:[90,96],elbow:[88,70],hand:[85,46],hip:[120,96],knee:[116,70],foot:[112,46]},
-    b:{head:[70,96],shoulder:[90,96],elbow:[68,82],hand:[48,78],hip:[120,96],knee:[146,90],foot:[172,94]}
+    a:{head:[70,96],shoulder:[90,96],elbow:[90,70],hand:[90,46],hip:[120,96],knee:[120,70],foot:[98,72]},
+    b:{head:[70,96],shoulder:[90,96],elbow:[65,88],hand:[42,84],hip:[120,96],knee:[145,88],foot:[168,92]}
   },
   frontplank:{
     context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[38,68],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,64],knee:[150,80],foot:[170,88]},
-    b:{head:[38,80],shoulder:[54,82],elbow:[54,100],hand:[54,105],hip:[112,85],knee:[150,86],foot:[170,88]}
+    a:{head:[36,72],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,64],knee:[150,80],foot:[170,88]},
+    b:{head:[36,72],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,85],knee:[150,86],foot:[170,88]}
   }
 };
 function stickFigureSvg(animatieId, opts){
@@ -623,7 +628,12 @@ function renderHeader(titel, backToVandaag){
     <button class="icon-btn" data-action="ga-instellingen" aria-label="Instellingen">⚙</button>
   </div>`;
 }
-function goto(screen){ ui.screen = screen; ui.flow=null; render(); window.scrollTo(0,0); }
+function goto(screen){
+  stopSpeech();
+  if(ui.flow) clearTimers();
+  clearSavedFlow();
+  ui.screen = screen; ui.flow=null; render(); window.scrollTo(0,0);
+}
 
 /* ===================== ONBOARDING (F10) ===================== */
 function renderOnboarding(){
@@ -799,31 +809,56 @@ function startWorkout(workoutId){
     secTimer:null, secElapsed:0, secTotal:0, secRunning:false,
     inputVal:null,
     autoRun: state.instellingen.autoRun!==false,
-    autoTimer:null, autoMode:false, autoStarted:false, autoAnnounced:false, autoRepsCompleted:0
+    autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
+    countdownTimer:null, countdownVal:0, pausedForDetail:false
   };
+  saveFlowSnapshot();
   render();
 }
 function currentStep(){ return ui.flow.steps[ui.flow.index]; }
 function clearTimers(){
+  // Stopt alleen de lopende intervallen/timeouts, NIET de spraak — zie stopSpeech() daarvoor.
+  // Anders kapt elke stap-overgang de laatst gesproken zin ("Klaar.", "Ga verder.") af.
   if(ui.flow.timer){ clearInterval(ui.flow.timer); ui.flow.timer=null; }
   if(ui.flow.holdTimer){ clearInterval(ui.flow.holdTimer); ui.flow.holdTimer=null; }
   if(ui.flow.secTimer){ clearInterval(ui.flow.secTimer); ui.flow.secTimer=null; }
-  // clearInterval also cancels setTimeout handles in every evergreen browser (shared id pool) — autoTimer uses both
+  // clearInterval also cancels setTimeout handles in every evergreen browser (shared id pool) — autoTimer/countdownTimer use both
   if(ui.flow.autoTimer){ clearInterval(ui.flow.autoTimer); ui.flow.autoTimer=null; }
-  if("speechSynthesis" in window) speechSynthesis.cancel();
+  if(ui.flow.countdownTimer){ clearInterval(ui.flow.countdownTimer); ui.flow.countdownTimer=null; }
 }
 function advanceStep(){
   clearTimers();
   ui.flow.index++;
-  ui.flow.inputVal = null;
-  ui.flow.secElapsed = 0; ui.flow.secTotal = 0; ui.flow.secRunning=false;
-  ui.flow.holdRunning=false; ui.flow.holdTotal=0;
-  ui.flow.autoMode=false; ui.flow.autoStarted=false; ui.flow.autoAnnounced=false; ui.flow.autoRepsCompleted=0;
+  resetStepAutoState(ui.flow);
   if(ui.flow.index >= ui.flow.steps.length){
     finishWorkout();
   } else {
+    saveFlowSnapshot();
     render();
   }
+}
+function resetStepAutoState(f){
+  f.inputVal = null;
+  f.secElapsed = 0; f.secTotal = 0; f.secRunning = false;
+  f.holdRunning = false; f.holdTotal = 0;
+  f.autoMode = false; f.autoStarted = false; f.autoRepsCompleted = 0;
+  f.countdownVal = 0;
+}
+// Opent iemand de volledige uitleg midden in een workout, dan mis je anders de gesproken cue of
+// blijft de timer achter de modal doortikken. Pauzeren dus, en bij sluiten de aankondiging +
+// aftelling van die set gewoon opnieuw beginnen (niet hervatten — dat gaf verwarrende halve cues).
+function pauseFlowForDetail(){
+  const f = ui.flow;
+  if(!f || f.pausedForDetail) return;
+  stopSpeech();
+  clearTimers();
+  f.pausedForDetail = true;
+}
+function resumeFlowAfterDetail(){
+  const f = ui.flow;
+  if(!f || !f.pausedForDetail) return;
+  f.pausedForDetail = false;
+  resetStepAutoState(f);
 }
 /* ===================== TTS: beste beschikbare stem kiezen ===================== */
 let ttsVoice = null;
@@ -854,9 +889,12 @@ if("speechSynthesis" in window){
   refreshTtsVoice();
   speechSynthesis.onvoiceschanged = refreshTtsVoice;
 }
-function speak(text){
-  if(!state.instellingen.spraak) return;
-  if(!("speechSynthesis" in window)) return;
+// speak() is fire-and-forget door de rest van de app, maar geeft desgewenst een onDone-callback
+// terug (via speechSynthesis' onend / Audio's onended) zodat aankondiging -> aftellen -> start
+// netjes na elkaar lopen zonder dat een zin halverwege wordt afgekapt. Timers stoppen (clearTimers)
+// stopt daarom NIET automatisch de spraak — dat gebeurt alleen expliciet via stopSpeech().
+function speakLocal(text, onDone){
+  if(!("speechSynthesis" in window)){ if(onDone) onDone(); return; }
   try{
     if(!ttsVoicesChecked) refreshTtsVoice();
     const u = new SpeechSynthesisUtterance(text);
@@ -864,30 +902,139 @@ function speak(text){
     else { u.lang = "nl-NL"; }
     u.rate = 1;
     u.pitch = 1;
+    if(onDone){ u.onend = onDone; u.onerror = onDone; }
     speechSynthesis.speak(u);
-  }catch(e){}
+  }catch(e){ if(onDone) onDone(); }
+}
+
+/* ---- Azure Cognitive Services Speech (optioneel, eigen sleutel) ---- */
+const AZURE_VOICES = [
+  {value:"nl-NL-FennaNeural", label:"Fenna (vrouw)", gender:"Female"},
+  {value:"nl-NL-ColetteNeural", label:"Colette (vrouw)", gender:"Female"},
+  {value:"nl-NL-MaartenNeural", label:"Maarten (man)", gender:"Male"}
+];
+const azureCache = new Map(); // tekst -> blob-url, scheelt een netwerk-call bij herhaalde cues ("Vast." / "Los.")
+let azureAudioEl = null;
+let azureQueue = [];
+let azurePlaying = false;
+function azureConfigured(){
+  return !!(state.instellingen.azureKey && state.instellingen.azureRegion);
+}
+function escapeXml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&apos;"}[c]));
+}
+function speakAzure(text, onDone){
+  const i = state.instellingen;
+  const cached = azureCache.get(text);
+  if(cached){ enqueueAzure(cached, text, onDone); return; }
+  const voice = AZURE_VOICES.find(v=>v.value===i.azureVoice) || AZURE_VOICES[0];
+  const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'>${escapeXml(text)}</voice></speak>`;
+  const controller = new AbortController();
+  const timeout = setTimeout(()=>controller.abort(), 4000);
+  fetch(`https://${i.azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+    method:"POST",
+    headers:{
+      "Ocp-Apim-Subscription-Key": i.azureKey,
+      "Content-Type": "application/ssml+xml",
+      "X-Microsoft-OutputFormat": "audio-16khz-32kbitrate-mono-mp3"
+    },
+    body: ssml,
+    signal: controller.signal
+  }).then(res=>{
+    clearTimeout(timeout);
+    if(!res.ok) throw new Error("Azure TTS HTTP " + res.status);
+    return res.blob();
+  }).then(blob=>{
+    const url = URL.createObjectURL(blob);
+    azureCache.set(text, url);
+    enqueueAzure(url, text, onDone);
+  }).catch(()=>{
+    clearTimeout(timeout);
+    speakLocal(text, onDone); // netwerk weg, sleutel ongeldig, quotum op — val stil terug op de systeemstem
+  });
+}
+// Eén gedeeld <audio>-element kan maar één ding tegelijk afspelen — zonder wachtrij zou elke
+// nieuwe speak()-aanroep de vorige zin direct afkappen. Deze wachtrij speelt ze na elkaar af.
+function enqueueAzure(url, fallbackText, onDone){
+  azureQueue.push({url, fallbackText, onDone});
+  if(!azurePlaying) playNextAzure();
+}
+function playNextAzure(){
+  if(azureQueue.length===0){ azurePlaying=false; return; }
+  azurePlaying = true;
+  const item = azureQueue.shift();
+  if(!azureAudioEl) azureAudioEl = new Audio();
+  azureAudioEl.onended = azureAudioEl.onerror = () => { if(item.onDone) item.onDone(); playNextAzure(); };
+  azureAudioEl.src = item.url;
+  azureAudioEl.play().catch(()=>{
+    if(item.fallbackText) speakLocal(item.fallbackText, item.onDone); else if(item.onDone) item.onDone();
+    playNextAzure();
+  });
+}
+function stopAzureQueue(){
+  azureQueue = [];
+  azurePlaying = false;
+  if(azureAudioEl){
+    azureAudioEl.onended = null; azureAudioEl.onerror = null;
+    try{ azureAudioEl.pause(); }catch(e){}
+  }
+}
+function speak(text, onDone){
+  if(!state.instellingen.spraak){ if(onDone) onDone(); return; }
+  if(azureConfigured()) speakAzure(text, onDone);
+  else speakLocal(text, onDone);
+}
+// Onderbreekt alle spraak meteen — alleen aanroepen bij een bewuste context-wissel
+// (uitleg openen, workout afbreken, naar een ander scherm navigeren), nooit bij een normale
+// stap-overgang, anders wordt de laatste zin van de vorige stap afgekapt.
+function stopSpeech(){
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+  stopAzureQueue();
 }
 function speakTest(){
   refreshTtsVoice();
-  if("speechSynthesis" in window){
-    try{
-      const u = new SpeechSynthesisUtterance("Dit is de stem die je hoort tijdens je workout.");
-      if(ttsVoice){ u.voice = ttsVoice; u.lang = ttsVoice.lang; } else { u.lang = "nl-NL"; }
-      u.rate = 1; u.pitch = 1;
-      speechSynthesis.speak(u);
-    }catch(e){}
-  }
+  const text = "Dit is de stem die je hoort tijdens je workout.";
+  if(azureConfigured()) speakAzure(text); else speakLocal(text);
   render();
 }
 function stepAnnounceText(step){
   const kantTxt = step.kant ? (step.kant==="links" ? ", links" : ", rechts") : "";
   const setTxt = step.totalSets>1 ? `, set ${step.set} van ${step.totalSets}` : "";
-  if(step.niveau.doelType==="seconden") return `${step.oefening.naam}${kantTxt}${setTxt}. Doel: ${step.min} tot ${step.max} seconden.`;
-  const woord = step.niveau.doelType==="holds" ? "holds" : "herhalingen";
-  const holdTxt = step.niveau.holdSec ? `, elke keer ${step.niveau.holdSec} seconden vasthouden` : "";
-  return `${step.oefening.naam}${kantTxt}${setTxt}. Doel: ${step.min} tot ${step.max} ${woord}${holdTxt}.`;
+  return `${step.oefening.naam}${kantTxt}${setTxt}.`;
 }
 function isAutoCapable(step){ return step.niveau.doelType==="seconden" || !!step.niveau.holdSec; }
+// Elke set begint met alleen de oefeningnaam (geen doelbereik meer — dat staat al in beeld en in de
+// "i"-uitleg) gevolgd door een 3-2-1 aftelling, en pas daarna de echte hold/timer. Dit is bewust NIET
+// via speak()'s onDone-keten gebouwd: als spraak uit staat moet de aftelling nog steeds een paar
+// seconden duren zodat je de tijd hebt om in positie te komen.
+function beginAnnounceAndCountdown(step){
+  const f = ui.flow;
+  f.autoMode = true;
+  f.countdownVal = 3;
+  speak(stepAnnounceText(step));
+  render();
+  f.countdownTimer = setTimeout(()=>countdownTick(step), 1500);
+}
+function countdownTick(step){
+  const f = ui.flow;
+  if(!ui.flow || currentStep()!==step){ return; }
+  if(f.countdownVal<=0){ beginStepAction(step); return; }
+  speak(String(f.countdownVal));
+  f.countdownVal--;
+  render();
+  f.countdownTimer = setTimeout(()=>countdownTick(step), 1000);
+}
+function beginStepAction(step){
+  const f = ui.flow;
+  f.countdownVal = 0;
+  if(navigator.vibrate) navigator.vibrate(80);
+  if(isAutoCapable(step)){
+    if(step.niveau.doelType==="seconden") startAutoSeconden(); else startAutoReps();
+  } else {
+    f.autoMode = false;
+    render();
+  }
+}
 // Timer ticks patch just the ring/number instead of a full render() — a full render tears down and
 // rebuilds every node (incl. re-wiring all listeners and restarting the stick-figure CSS animation),
 // which is wasteful and visibly janky when it happens every second during a hold or rest.
@@ -912,7 +1059,7 @@ function startAutoSeconden(){
   f.secElapsed = 0;
   f.secRunning = true;
   f.autoMode = true;
-  speak(stepAnnounceText(step) + " Start.");
+  render();
   f.secTimer = setInterval(()=>{
     f.secElapsed++;
     if(f.secTotal>15 && f.secElapsed===f.secTotal-10) speak("Nog tien seconden.");
@@ -938,7 +1085,8 @@ function startAutoReps(){
   f.holdTotal = holdSec;
   f.holdRemaining = holdSec;
   f.holdRunning = true;
-  speak(stepAnnounceText(step) + " Vast.");
+  speak("Vast.");
+  render();
   autoRepTick(holdSec, target);
 }
 function autoRepTick(holdSec, target){
@@ -975,6 +1123,7 @@ function stopAuto(){
   const step = currentStep();
   clearTimers();
   f.autoMode = false;
+  f.countdownVal = 0;
   if(step.niveau.doelType==="seconden"){ f.secRunning=false; f.inputVal=f.secElapsed; }
   else { f.holdRunning=false; f.inputVal=f.autoRepsCompleted; }
   render();
@@ -989,6 +1138,7 @@ function finishWorkout(){
     feedback: Object.fromEntries(oefeningIds.map(id=>[id,"goed"]))
   };
   ui.flow = null;
+  clearSavedFlow();
   ui.screen = "afsluiten";
   render();
 }
@@ -1074,23 +1224,27 @@ function renderSetStep(step){
   const f = ui.flow;
   const oef = step.oefening;
   const vg = ensureVoortgang(step.oefeningId);
-  if(!vg.geintroduceerd){ vg.geintroduceerd = true; ui.detailOefeningId = step.oefeningId; }
+  if(!vg.geintroduceerd){
+    vg.geintroduceerd = true;
+    ui.detailOefeningId = step.oefeningId;
+    pauseFlowForDetail();
+  }
   const isSeconden = step.niveau.doelType==="seconden";
   const autoCapable = isAutoCapable(step);
   if(f.inputVal===null && !f.autoMode){ f.inputVal = step.max; }
 
-  if(f.autoRun && autoCapable && !f.autoStarted){
+  if(f.autoRun && !f.autoStarted && !f.pausedForDetail){
     f.autoStarted = true;
-    if(isSeconden) startAutoSeconden(); else startAutoReps();
-  } else if(f.autoRun && !autoCapable && !f.autoAnnounced){
-    f.autoAnnounced = true;
-    speak(stepAnnounceText(step) + " Doe je eigen tempo en tik daarna op Set loggen.");
+    beginAnnounceAndCountdown(step);
   }
 
   const setLabel = step.totalSets>1 ? `Set ${step.set} van ${step.totalSets}` : "Set";
   let timerBlock = "";
   let showManualControls = true;
-  if(isSeconden){
+  if(f.countdownVal > 0){
+    showManualControls = false;
+    timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${Math.round((3-f.countdownVal)/3*100)}"><div class="inner"><div class="time" id="wf-time">${f.countdownVal}</div><div class="muted small">klaarmaken</div></div></div>`;
+  } else if(isSeconden){
     const pct = f.secTotal ? Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)) : 0;
     if(f.autoMode && f.secRunning){
       showManualControls = false;
@@ -1356,8 +1510,8 @@ function renderDetailModal(oefeningId){
       <p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
       <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
       <p>${escapeHtml(u.kort)}</p>
-      <a class="btn btn-block" style="margin-bottom:10px;text-decoration:none" href="https://www.youtube.com/results?search_query=${encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie")}" target="_blank" rel="noopener">Bekijk uitlegvideo's (YouTube, opent extern)</a>
-      <p class="fine" style="margin-top:-6px;margin-bottom:14px">De animatie hierboven is een geheugensteuntje, geen complete instructie. Bekijk bij een oefening die je nog nooit deed sowieso een video van een expert voordat je begint.</p>
+      <a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${oef.video || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie"))}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>
+      <p class="fine" style="margin-top:0;margin-bottom:14px">De animatie hierboven is een geheugensteuntje, geen complete instructie. Bekijk bij een oefening die je nog nooit deed sowieso een video van een expert voordat je begint. Een specifieke video kan later offline of verwijderd zijn — zoek in dat geval opnieuw op "${escapeHtml(oef.naam)}" op YouTube.</p>
       <details open>
         <summary>Uitvoering stap voor stap</summary>
         <ol>${u.uitvoering.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}</ol>
@@ -1524,10 +1678,30 @@ function renderInstellingen(){
         </div>
         <label class="switch"><input type="checkbox" id="set-spraak" ${i.spraak?"checked":""}><span class="track"></span><span class="thumb"></span></label>
       </div>
-      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:14px">
-        <p class="fine" style="margin:0">${ttsVoice ? `Gevonden stem: ${escapeHtml(ttsVoice.name)} (${ttsVoice.localService?"lokaal":"netwerk"})` : "Nog geen Nederlandse stem gevonden op dit toestel — standaardstem wordt gebruikt."}</p>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+        <p class="fine" style="margin:0">${azureConfigured()
+          ? `Actieve stem: Azure — ${escapeHtml((AZURE_VOICES.find(v=>v.value===i.azureVoice)||AZURE_VOICES[0]).label)}`
+          : (ttsVoice ? `Gevonden stem: ${escapeHtml(ttsVoice.name)} (${ttsVoice.localService?"lokaal":"netwerk"})` : "Nog geen Nederlandse stem gevonden op dit toestel — standaardstem wordt gebruikt.")}</p>
         <button class="btn btn-sm" data-action="test-stem">Test stem</button>
       </div>
+      <details style="margin-bottom:14px">
+        <summary>Betere stem via Azure (optioneel, eigen sleutel)</summary>
+        <p class="fine">Azure's neurale stemmen klinken natuurlijker dan de systeemstem, maar zijn een cloud-dienst: er gaat een netwerkverzoek naar Microsoft per aankondiging, je hebt zelf een (gratis-tier) Azure-account en Speech-resource nodig, en je sleutel staat alleen lokaal op dit toestel — nooit in de app zelf. Lukt een verzoek niet (geen internet, sleutel op), dan valt de app automatisch terug op de systeemstem.</p>
+        <div class="field">
+          <label for="set-azure-key">Azure Speech-sleutel</label>
+          <input type="password" id="set-azure-key" value="${escapeHtml(i.azureKey||"")}" placeholder="plak hier je subscription key" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="set-azure-region">Azure-regio</label>
+          <input type="text" id="set-azure-region" value="${escapeHtml(i.azureRegion||"")}" placeholder="bijv. westeurope">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="set-azure-voice">Stem</label>
+          <select id="set-azure-voice">
+            ${AZURE_VOICES.map(v=>`<option value="${v.value}" ${i.azureVoice===v.value?"selected":""}>${escapeHtml(v.label)}</option>`).join("")}
+          </select>
+        </div>
+      </details>
       <div class="field" style="margin-bottom:0">
         <label for="set-lengte">Lengte in cm</label>
         <input type="number" id="set-lengte" value="${i.lengteCm||""}" placeholder="optioneel">
@@ -1680,10 +1854,10 @@ function onAction(e){
     case "close-microkeuze": ui.microKeuzeOpen = false; render(); break;
     case "start-workout": ui.microKeuzeOpen = false; startWorkout(el.dataset.workout); break;
     case "week-overslaan": weekOverslaan(); break;
-    case "warmup-klaar": ui.flow.warmup = false; render(); break;
+    case "warmup-klaar": ui.flow.warmup = false; saveFlowSnapshot(); render(); break;
     case "stop-workout": if(confirm("Workout afbreken? Voortgang van deze sessie gaat verloren.")){ clearTimers(); ui.flow=null; goto("vandaag"); } break;
-    case "open-uitleg": ui.detailOefeningId = el.dataset.oefening; render(); break;
-    case "close-detail": ui.detailOefeningId = null; render(); break;
+    case "open-uitleg": ui.detailOefeningId = el.dataset.oefening; pauseFlowForDetail(); render(); break;
+    case "close-detail": ui.detailOefeningId = null; resumeFlowAfterDetail(); render(); break;
     case "val-min": ui.flow.inputVal = Math.max(0, ui.flow.inputVal-1); render(); break;
     case "val-plus": ui.flow.inputVal = ui.flow.inputVal+1; render(); break;
     case "log-set": logCurrentSet(); break;
@@ -1777,6 +1951,10 @@ function wireBoundInputs(){
   if(setAutorun) setAutorun.addEventListener("change", ()=>{ state.instellingen.autoRun = setAutorun.checked; render(); });
   const setSpraak = document.getElementById("set-spraak");
   if(setSpraak) setSpraak.addEventListener("change", ()=>{ state.instellingen.spraak = setSpraak.checked; if(!setSpraak.checked && "speechSynthesis" in window) speechSynthesis.cancel(); render(); });
+  bindText("set-azure-key", v=>state.instellingen.azureKey = v||null);
+  bindText("set-azure-region", v=>state.instellingen.azureRegion = v||null);
+  const setAzureVoice = document.getElementById("set-azure-voice");
+  if(setAzureVoice) setAzureVoice.addEventListener("change", ()=>{ state.instellingen.azureVoice = setAzureVoice.value; render(); });
   bindText("set-lengte", v=>state.instellingen.lengteCm = v?parseFloat(v):null);
   if(ui.blokreview){
     document.querySelectorAll("[data-bind-br]").forEach(el=>{
@@ -1788,7 +1966,7 @@ function wireBoundInputs(){
     ov.addEventListener("click", (e)=>{
       if(e.target !== ov) return;
       const which = ov.dataset.overlay;
-      if(which==="detail") ui.detailOefeningId = null;
+      if(which==="detail"){ ui.detailOefeningId = null; resumeFlowAfterDetail(); }
       else if(which==="microkeuze") ui.microKeuzeOpen = false;
       else return;
       render();
@@ -1802,7 +1980,46 @@ function wireCommon(){
   wireBoundInputs();
 }
 
+/* ===================== WORKOUT-VOORTGANG BEWAREN OVER RELOAD ===================== */
+// Android kan de PWA-pagina op elk moment herladen zodra hij naar de achtergrond gaat (andere app,
+// scherm uit, een externe link zoals YouTube) — zonder dit zou je dan terugvallen op "Vandaag" en je
+// voortgang in de workout kwijtraken. We bewaren daarom genoeg om de huidige stap terug te vinden;
+// die stap start bij herstel gewoon opnieuw (zelfde gedrag als na het sluiten van de uitleg-modal).
+const FLOW_STORAGE_KEY = "kernkracht_flow_v1";
+function saveFlowSnapshot(){
+  if(!ui.flow) return;
+  const snap = {
+    workoutId: ui.flow.workoutId, index: ui.flow.index, results: ui.flow.results,
+    startTime: ui.flow.startTime, warmup: ui.flow.warmup, autoRun: ui.flow.autoRun
+  };
+  try{ localStorage.setItem(FLOW_STORAGE_KEY, JSON.stringify(snap)); }catch(e){}
+}
+function clearSavedFlow(){
+  try{ localStorage.removeItem(FLOW_STORAGE_KEY); }catch(e){}
+}
+function restoreFlowIfAny(){
+  if(!state.onboarded) return;
+  let snap;
+  try{ snap = JSON.parse(localStorage.getItem(FLOW_STORAGE_KEY)); }catch(e){ return; }
+  if(!snap || !snap.workoutId) return;
+  const workout = getWorkout(snap.workoutId);
+  if(!workout) { clearSavedFlow(); return; }
+  const steps = buildSteps(workout);
+  if(!(snap.index>=0) || snap.index>=steps.length){ clearSavedFlow(); return; }
+  ui.flow = {
+    workoutId: snap.workoutId, steps, index: snap.index, results: snap.results||[], startTime: snap.startTime||Date.now(),
+    warmup: !!snap.warmup, warmupAnnounced:false, timer:null, restRemaining:0, restTotal:0,
+    holdTimer:null, holdRemaining:0, holdTotal:0, holdRunning:false,
+    secTimer:null, secElapsed:0, secTotal:0, secRunning:false,
+    inputVal:null,
+    autoRun: snap.autoRun!==false,
+    autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
+    countdownTimer:null, countdownVal:0, pausedForDetail:false
+  };
+}
+
 /* ===================== INIT ===================== */
+restoreFlowIfAny();
 render();
 setInterval(checkReminder, 60000);
 document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) checkReminder(); });

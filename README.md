@@ -174,6 +174,13 @@ Eén JSON-object, bewaard in `localStorage` onder de sleutel
   (zie `ANIMATIONS` in `index.html`). Nieuwe oefeningen die nog geen
   animatie hebben, krijgen `"animatie": null`; de app toont dan een
   neutrale placeholder in plaats van een geanimeerde stick figure.
+- `oefeningen[].video` (optioneel) — directe YouTube-URL naar een
+  uitlegvideo van die oefening, getoond als externe link (opent in een
+  nieuw tabblad) bovenaan de volledige uitleg. Ontbreekt dit veld, dan
+  valt de app terug op een YouTube-zoeklink met de oefeningnaam. Geen
+  video embedden — dat zou alsnog een verbinding vereisen bij het
+  openen van de app en een licentierisico met zich meebrengen (zie
+  briefing, punt 2).
 
 **`instellingen`** (aanvullend op de functionele instellingen)
 - `autoRun` (boolean, default `true`) — of oefeningen met een vaste
@@ -193,6 +200,12 @@ Eén JSON-object, bewaard in `localStorage` onder de sleutel
   Puur lokale TTS van het besturingssysteem; geen externe request.
   Werkt niet gegarandeerd op elk toestel/elke browserversie — het is
   een hulpmiddel, geen vereiste voor de app om te functioneren.
+- `azureKey`, `azureRegion`, `azureVoice` (alle optioneel, default `null`
+  / `null` / `"nl-NL-FennaNeural"`) — als beide `azureKey` en
+  `azureRegion` zijn ingevuld, gebruikt `speak()` Azure Cognitive
+  Services Speech (neurale stem, natuurlijker dan de systeemstem) in
+  plaats van de lokale Web Speech API. Zie "Azure-spraak" hieronder voor
+  de afwegingen en installatie.
 
 **`voortgang`** (per `oefeningId`)
 - `niveau` — huidig niveau (verwijst naar `niveaus[].n`).
@@ -245,3 +258,41 @@ een Claude-chat plakt om het volgende programmablok te laten
 samenstellen. Het antwoord van Claude moet een programma-alleen
 JSON-bestand zijn zoals hierboven beschreven, dat direct te importeren
 is.
+
+## Azure-spraak (optioneel)
+
+Standaard gebruikt de app de lokale Web Speech API van de telefoon/
+browser (gratis, werkt altijd, kwaliteit hangt af van de TTS-engine die
+op het toestel staat). Wie een natuurlijkere stem wil, kan in
+Instellingen → Spraakbegeleiding → "Betere stem via Azure" een eigen
+Azure Speech-sleutel en -regio invullen. Zodra beide zijn ingevuld,
+gebruikt `speak()` (in `index.html`) Azure Cognitive Services Speech
+in plaats van de systeemstem.
+
+**Afwegingen, expliciet:**
+- **Niet gratis boven een grens.** De gratis tier van Azure Speech geeft
+  circa 500.000 tekens/maand aan neurale spraak — voor een paar
+  workouts per week ruim voldoende, maar bij overschrijding wordt er
+  gefactureerd op het Azure-account van de sleutelhouder.
+- **De sleutel is niet geheim te houden in een statische site.** Er is
+  geen server om 'm achter te verstoppen. De sleutel wordt daarom nooit
+  in `index.html`/de repo opgeslagen, alleen in `localStorage` op het
+  toestel van de gebruiker die 'm zelf invult. Wie devtools opent op
+  dat toestel kan de sleutel wel zien.
+- **Netwerkafhankelijk en iets trager.** Elke aankondiging is een
+  HTTP-verzoek naar `https://{regio}.tts.speech.microsoft.com`. Korte,
+  veelvoorkomende cues ("Vast.", "Los.", "Klaar.", "Rust, N seconden.",
+  "Nog tien seconden.", "Ga verder.") worden per exacte tekst
+  gecachet (`azureCache` in `index.html`) zodat ze na de eerste keer
+  instant afspelen. Nieuwe/variabele tekst (oefeningnaam + doel) kost
+  wel steeds een verzoek.
+- **Automatische terugval.** Lukt het verzoek niet (geen internet,
+  ongeldige sleutel, timeout na 4s, quotum op), dan valt de app
+  stilzwijgend terug op de lokale systeemstem — spraak blijft dus altijd
+  werken, ook zonder Azure.
+
+**Eigen sleutel aanmaken:** een gratis Azure-account op
+[azure.microsoft.com](https://azure.microsoft.com), daarna in de Azure
+Portal een resource van het type "Speech" aanmaken (regio bijv.
+`westeurope`), en de "Key 1" + regio uit die resource kopiëren naar de
+instellingen van de app.
