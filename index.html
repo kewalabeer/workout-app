@@ -632,8 +632,26 @@ function goto(screen){
   stopSpeech();
   if(ui.flow) clearTimers();
   clearSavedFlow();
+  releaseWakeLock();
   ui.screen = screen; ui.flow=null; render(); window.scrollTo(0,0);
 }
+/* ===================== SCREEN WAKE LOCK ===================== */
+// Zonder dit dooft het scherm tijdens een handsfree workout vanzelf (geen aanraking nodig =
+// geen signaal voor Android dat de telefoon actief gebruikt wordt).
+let wakeLock = null;
+async function acquireWakeLock(){
+  if(!("wakeLock" in navigator)) return;
+  try{
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => { wakeLock = null; });
+  }catch(e){}
+}
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock = null; }
+}
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible" && ui.flow && !wakeLock) acquireWakeLock();
+});
 
 /* ===================== ONBOARDING (F10) ===================== */
 function renderOnboarding(){
@@ -810,8 +828,9 @@ function startWorkout(workoutId){
     inputVal:null,
     autoRun: state.instellingen.autoRun!==false,
     autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, pausedForDetail:false
+    countdownTimer:null, countdownVal:0, countdownActive:false, pausedForDetail:false
   };
+  acquireWakeLock();
   saveFlowSnapshot();
   render();
 }
@@ -842,7 +861,7 @@ function resetStepAutoState(f){
   f.secElapsed = 0; f.secTotal = 0; f.secRunning = false;
   f.holdRunning = false; f.holdTotal = 0;
   f.autoMode = false; f.autoStarted = false; f.autoRepsCompleted = 0;
-  f.countdownVal = 0;
+  f.countdownVal = 0; f.countdownActive = false;
 }
 // Opent iemand de volledige uitleg midden in een workout, dan mis je anders de gesproken cue of
 // blijft de timer achter de modal doortikken. Pauzeren dus, en bij sluiten de aankondiging +
@@ -1020,23 +1039,34 @@ function isAutoCapable(step){ return step.niveau.doelType==="seconden" || !!step
 function beginAnnounceAndCountdown(step){
   const f = ui.flow;
   f.autoMode = true;
+  f.countdownActive = true;
   f.countdownVal = 3;
   speak(stepAnnounceText(step));
   render();
-  f.countdownTimer = setTimeout(()=>countdownTick(step), 1500);
+  f.countdownTimer = setTimeout(()=>countdownTick(step), 1000);
 }
+// Elke tick toont en spreekt het HUIDIGE getal, en pas ná de wachttijd van dat getal wordt er
+// verder gegaan naar het volgende (of naar de echte start). Zo staat er nooit een render tussenin
+// die een halfklare hold-view laat zien terwijl het aftellen nog bezig is — dat gaf eerder de indruk
+// dat de eerste rep al liep tijdens het aftellen.
 function countdownTick(step){
   const f = ui.flow;
-  if(!ui.flow || currentStep()!==step){ return; }
-  if(f.countdownVal<=0){ beginStepAction(step); return; }
+  if(!ui.flow || currentStep()!==step) return;
   speak(String(f.countdownVal));
-  f.countdownVal--;
   render();
-  f.countdownTimer = setTimeout(()=>countdownTick(step), 1000);
+  f.countdownTimer = setTimeout(()=>{
+    if(f.countdownVal<=1){
+      f.countdownActive = false;
+      f.countdownVal = 0;
+      beginStepAction(step);
+    } else {
+      f.countdownVal--;
+      countdownTick(step);
+    }
+  }, 667);
 }
 function beginStepAction(step){
   const f = ui.flow;
-  f.countdownVal = 0;
   if(navigator.vibrate) navigator.vibrate(80);
   if(isAutoCapable(step)){
     if(step.niveau.doelType==="seconden") startAutoSeconden(); else startAutoReps();
@@ -1131,9 +1161,10 @@ function autoRepTick(holdSec, target){
 function stopAuto(){
   const f = ui.flow;
   const step = currentStep();
+  stopSpeech();
   clearTimers();
   f.autoMode = false;
-  f.countdownVal = 0;
+  f.countdownVal = 0; f.countdownActive = false;
   if(step.niveau.doelType==="seconden"){ f.secRunning=false; f.inputVal=f.secElapsed; }
   else { f.holdRunning=false; f.inputVal=f.autoRepsCompleted; }
   render();
@@ -1149,6 +1180,7 @@ function finishWorkout(){
   };
   ui.flow = null;
   clearSavedFlow();
+  releaseWakeLock();
   ui.screen = "afsluiten";
   render();
 }
@@ -1251,7 +1283,7 @@ function renderSetStep(step){
   const setLabel = step.totalSets>1 ? `Set ${step.set} van ${step.totalSets}` : "Set";
   let timerBlock = "";
   let showManualControls = true;
-  if(f.countdownVal > 0){
+  if(f.countdownActive){
     showManualControls = false;
     timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${Math.round((3-f.countdownVal)/3*100)}"><div class="inner"><div class="time" id="wf-time">${f.countdownVal}</div><div class="muted small">klaarmaken</div></div></div>`;
   } else if(isSeconden){
@@ -1864,18 +1896,18 @@ function onAction(e){
     case "close-microkeuze": ui.microKeuzeOpen = false; render(); break;
     case "start-workout": ui.microKeuzeOpen = false; startWorkout(el.dataset.workout); break;
     case "week-overslaan": weekOverslaan(); break;
-    case "warmup-klaar": ui.flow.warmup = false; saveFlowSnapshot(); render(); break;
+    case "warmup-klaar": stopSpeech(); ui.flow.warmup = false; saveFlowSnapshot(); render(); break;
     case "stop-workout": if(confirm("Workout afbreken? Voortgang van deze sessie gaat verloren.")){ clearTimers(); ui.flow=null; goto("vandaag"); } break;
     case "open-uitleg": ui.detailOefeningId = el.dataset.oefening; pauseFlowForDetail(); render(); break;
     case "close-detail": ui.detailOefeningId = null; resumeFlowAfterDetail(); render(); break;
     case "val-min": ui.flow.inputVal = Math.max(0, ui.flow.inputVal-1); render(); break;
     case "val-plus": ui.flow.inputVal = ui.flow.inputVal+1; render(); break;
-    case "log-set": logCurrentSet(); break;
+    case "log-set": stopSpeech(); logCurrentSet(); break;
     case "sec-start": secStart(); break;
     case "sec-stop": secStop(); break;
     case "sec-reset": secReset(); break;
     case "hold-start": holdStart(); break;
-    case "rest-skip": clearTimers(); ui.flow.restTotal=0; ui.flow.restRemaining=0; advanceStep(); break;
+    case "rest-skip": stopSpeech(); clearTimers(); ui.flow.restTotal=0; ui.flow.restRemaining=0; advanceStep(); break;
     case "toggle-autorun": ui.flow.autoRun = !ui.flow.autoRun; render(); break;
     case "toggle-spraak": state.instellingen.spraak = !state.instellingen.spraak; if(!state.instellingen.spraak && "speechSynthesis" in window) speechSynthesis.cancel(); render(); break;
     case "auto-stop": stopAuto(); break;
@@ -2024,7 +2056,7 @@ function restoreFlowIfAny(){
     inputVal:null,
     autoRun: snap.autoRun!==false,
     autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, pausedForDetail:false
+    countdownTimer:null, countdownVal:0, countdownActive:false, pausedForDetail:false
   };
 }
 
