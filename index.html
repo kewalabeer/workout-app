@@ -1200,6 +1200,28 @@ function warmupUitlegFor(item){
   const key = Object.keys(WARMUP_UITLEG).find(k=>item.toLowerCase().includes(k));
   return key ? WARMUP_UITLEG[key] : "";
 }
+// Uitklapbare lijst van alle oefeningen in deze workout, getoond tijdens de warming-up: zo kun je
+// vooraf uitzoeken hoe onbekende oefeningen moeten en daarna de hele set in één keer afwerken,
+// zonder halverwege te stoppen om iets op te zoeken. Openklappen telt als "geïntroduceerd", zodat
+// de app die oefening niet nog eens automatisch pauzeert tijdens de workout — de "i"-knop blijft
+// beschikbaar tijdens elke set voor oefeningen die je hier hebt overgeslagen.
+function renderOefeningenOverzicht(workout){
+  const ids = [...new Set(workout.oefeningen.map(wo=>wo.oefeningId))];
+  return `<div class="card">
+    <h2 style="margin-bottom:4px">Oefeningen in deze workout</h2>
+    <p class="muted small" style="margin-bottom:12px">Klap een oefening open voor de uitleg en een video, vóórdat je begint. Dan hoef je onderweg niet te stoppen om iets op te zoeken.</p>
+    ${ids.map(id=>{
+      const oef = getOefening(id);
+      const vg = ensureVoortgang(id);
+      const niveau = huidigNiveau(id);
+      const nieuwLabel = !vg.geintroduceerd ? `<span class="badge warn" style="margin-right:6px">Nieuw</span>` : "";
+      return `<details data-oefening-preview="${id}">
+        <summary><span>${nieuwLabel}${escapeHtml(oef.naam)} <span class="muted small">— ${escapeHtml(niveau.naam)}</span></span></summary>
+        ${renderUitlegBody(id)}
+      </details>`;
+    }).join("")}
+  </div>`;
+}
 function renderWorkoutFlow(){
   const f = ui.flow;
   const workout = getWorkout(f.workoutId);
@@ -1211,6 +1233,7 @@ function renderWorkoutFlow(){
         <h2>Warming-up</h2>
         <div class="stack">${workout.warmingUp.map(w=>`<div><b>${escapeHtml(w)}</b><div class="muted small">${escapeHtml(warmupUitlegFor(w))}</div></div>`).join("")}</div>
       </div>
+      ${renderOefeningenOverzicht(workout)}
       <button class="btn btn-primary btn-block btn-huge" data-action="warmup-klaar">Warming-up gedaan</button>
       <button class="btn btn-ghost btn-block" data-action="stop-workout" style="margin-top:8px">Workout afbreken</button>
     </div>`;
@@ -1547,18 +1570,14 @@ function renderSuggestieCard(s){
 }
 
 /* ===================== OEFENINGDETAIL (scherm 4) ===================== */
-function renderDetailModal(oefeningId){
+// Gedeelde uitleg-inhoud (zonder modal-chrome) — hergebruikt door de "i"-modal tijdens de workout-flow
+// én door het uitklapbare oefeningenoverzicht op het warming-up-scherm.
+function renderUitlegBody(oefeningId){
   const oef = getOefening(oefeningId);
   if(!oef) return "";
   const u = oef.uitleg;
   const niveau = huidigNiveau(oefeningId);
-  return `<div class="modal-overlay" data-overlay="detail">
-    <div class="modal">
-      <div class="space-between">
-        <h2 style="margin-bottom:0">${escapeHtml(oef.naam)}</h2>
-        <button class="icon-btn" data-action="close-detail" aria-label="Sluiten">✕</button>
-      </div>
-      <p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
+  return `<p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
       <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
       <p>${escapeHtml(u.kort)}</p>
       <a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${oef.video || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie"))}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>
@@ -1578,7 +1597,18 @@ function renderDetailModal(oefeningId){
       <details>
         <summary>Wanneer stoppen</summary>
         <p style="margin:0">${escapeHtml(u.stoppen)}</p>
-      </details>
+      </details>`;
+}
+function renderDetailModal(oefeningId){
+  const oef = getOefening(oefeningId);
+  if(!oef) return "";
+  return `<div class="modal-overlay" data-overlay="detail">
+    <div class="modal">
+      <div class="space-between">
+        <h2 style="margin-bottom:0">${escapeHtml(oef.naam)}</h2>
+        <button class="icon-btn" data-action="close-detail" aria-label="Sluiten">✕</button>
+      </div>
+      ${renderUitlegBody(oefeningId)}
       <button class="btn btn-block" data-action="close-detail" style="margin-top:6px">Sluiten</button>
     </div>
   </div>`;
@@ -1979,6 +2009,11 @@ function wireBoundInputs(){
     const el = document.getElementById(id);
     if(el) el.addEventListener("input", () => setter(el.value));
   };
+  document.querySelectorAll("[data-oefening-preview]").forEach(el=>{
+    el.addEventListener("toggle", ()=>{
+      if(el.open){ ensureVoortgang(el.dataset.oefeningPreview).geintroduceerd = true; save(); }
+    });
+  });
   if(ui.onboarding){
     bindText("ob-naam", v=>ui.onboarding.naam=v);
     bindText("ob-lengte", v=>ui.onboarding.lengteCm=v);
