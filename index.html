@@ -827,8 +827,8 @@ function startWorkout(workoutId){
     secTimer:null, secElapsed:0, secTotal:0, secRunning:false,
     inputVal:null,
     autoRun: state.instellingen.autoRun!==false,
-    autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, countdownActive:false, pausedForDetail:false
+    autoTimer:null, autoPhase:null, autoStarted:false, autoRepsCompleted:0,
+    countdownTimer:null, countdownVal:0, pausedForDetail:false
   };
   acquireWakeLock();
   saveFlowSnapshot();
@@ -860,8 +860,8 @@ function resetStepAutoState(f){
   f.inputVal = null;
   f.secElapsed = 0; f.secTotal = 0; f.secRunning = false;
   f.holdRunning = false; f.holdTotal = 0;
-  f.autoMode = false; f.autoStarted = false; f.autoRepsCompleted = 0;
-  f.countdownVal = 0; f.countdownActive = false;
+  f.autoPhase = null; f.autoStarted = false; f.autoRepsCompleted = 0;
+  f.countdownVal = 0;
 }
 // Opent iemand de volledige uitleg midden in een workout, dan mis je anders de gesproken cue of
 // blijft de timer achter de modal doortikken. Pauzeren dus, en bij sluiten de aankondiging +
@@ -919,7 +919,7 @@ function speakLocal(text, onDone){
     const u = new SpeechSynthesisUtterance(text);
     if(ttsVoice){ u.voice = ttsVoice; u.lang = ttsVoice.lang; }
     else { u.lang = "nl-NL"; }
-    u.rate = 1;
+    u.rate = 1.15;
     u.pitch = 1;
     if(onDone){ u.onend = onDone; u.onerror = onDone; }
     speechSynthesis.speak(u);
@@ -950,7 +950,7 @@ function speakAzure(text, onDone){
   const cacheKey = voice.value + "::" + text;
   const cached = azureCache.get(cacheKey);
   if(cached){ enqueueAzure(cached, text, onDone); return; }
-  const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'>${escapeXml(text)}</voice></speak>`;
+  const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'><prosody rate='+15%'>${escapeXml(text)}</prosody></voice></speak>`;
   const controller = new AbortController();
   const timeout = setTimeout(()=>controller.abort(), 4000);
   fetch(`https://${i.azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`, {
@@ -1033,22 +1033,30 @@ function stepAnnounceText(step){
 }
 function isAutoCapable(step){ return step.niveau.doelType==="seconden" || !!step.niveau.holdSec; }
 // Elke set begint met alleen de oefeningnaam (geen doelbereik meer — dat staat al in beeld en in de
-// "i"-uitleg) gevolgd door een 3-2-1 aftelling, en pas daarna de echte hold/timer. Dit is bewust NIET
-// via speak()'s onDone-keten gebouwd: als spraak uit staat moet de aftelling nog steeds een paar
-// seconden duren zodat je de tijd hebt om in positie te komen.
+// "i"-uitleg), gevolgd door een 3-2-1 aftelling, en pas daarna de echte hold/timer. f.autoPhase is de
+// enige waarheid over welke fase we in zitten: "announcing" (naam wordt uitgesproken, nog geen cijfer
+// in beeld — voorheen verscheen de aftel-ring al terwijl de naam nog liep, doordat we op een gegokte
+// vaste tijd wachtten in plaats van op het echte einde van de spraak), "counting" (3-2-1 in beeld) en
+// "active" (de echte hold/seconden-timer loopt).
 function beginAnnounceAndCountdown(step){
   const f = ui.flow;
-  f.autoMode = true;
-  f.countdownActive = true;
+  f.autoPhase = "announcing";
   f.countdownVal = 3;
-  speak(stepAnnounceText(step));
-  render();
-  f.countdownTimer = setTimeout(()=>countdownTick(step), 1000);
+  speak(stepAnnounceText(step), () => {
+    // speak()'s onDone kan synchroon vuren (spraak staat uit) — via setTimeout altijd asynchroon
+    // laten doorlopen, anders zou dit een render() aanroepen middenin de render() die renderSetStep
+    // net aan het opbouwen was (dezelfde reentrancy die eerder navigatie brak).
+    setTimeout(() => {
+      if(!ui.flow || currentStep()!==step) return;
+      f.autoPhase = "counting";
+      render();
+      countdownTick(step);
+    }, 0);
+  });
 }
 // Elke tick toont en spreekt het HUIDIGE getal, en pas ná de wachttijd van dat getal wordt er
 // verder gegaan naar het volgende (of naar de echte start). Zo staat er nooit een render tussenin
-// die een halfklare hold-view laat zien terwijl het aftellen nog bezig is — dat gaf eerder de indruk
-// dat de eerste rep al liep tijdens het aftellen.
+// die een halfklare hold-view laat zien terwijl het aftellen nog bezig is.
 function countdownTick(step){
   const f = ui.flow;
   if(!ui.flow || currentStep()!==step) return;
@@ -1056,7 +1064,6 @@ function countdownTick(step){
   render();
   f.countdownTimer = setTimeout(()=>{
     if(f.countdownVal<=1){
-      f.countdownActive = false;
       f.countdownVal = 0;
       beginStepAction(step);
     } else {
@@ -1069,9 +1076,10 @@ function beginStepAction(step){
   const f = ui.flow;
   if(navigator.vibrate) navigator.vibrate(80);
   if(isAutoCapable(step)){
+    f.autoPhase = "active";
     if(step.niveau.doelType==="seconden") startAutoSeconden(); else startAutoReps();
   } else {
-    f.autoMode = false;
+    f.autoPhase = null;
     render();
   }
 }
@@ -1098,14 +1106,13 @@ function startAutoSeconden(){
   f.secTotal = step.max;
   f.secElapsed = 0;
   f.secRunning = true;
-  f.autoMode = true;
   render();
   f.secTimer = setInterval(()=>{
     f.secElapsed++;
     if(f.secTotal>15 && f.secElapsed===f.secTotal-10) speak("Nog tien seconden.");
     if(f.secElapsed >= f.secTotal){
       clearInterval(f.secTimer); f.secTimer=null;
-      f.secRunning = false; f.autoMode = false;
+      f.secRunning = false; f.autoPhase = null;
       if(navigator.vibrate) navigator.vibrate(200);
       speak("Klaar.");
       f.inputVal = f.secTotal;
@@ -1120,7 +1127,6 @@ function startAutoReps(){
   const step = currentStep();
   const holdSec = step.niveau.holdSec;
   const target = step.max;
-  f.autoMode = true;
   f.autoRepsCompleted = 0;
   f.holdTotal = holdSec;
   f.holdRemaining = holdSec;
@@ -1140,7 +1146,7 @@ function autoRepTick(holdSec, target){
       if(navigator.vibrate) navigator.vibrate(120);
       if(f.autoRepsCompleted >= target){
         speak("Klaar.");
-        f.autoMode = false;
+        f.autoPhase = null;
         f.inputVal = target;
         logCurrentSet();
         return;
@@ -1163,8 +1169,8 @@ function stopAuto(){
   const step = currentStep();
   stopSpeech();
   clearTimers();
-  f.autoMode = false;
-  f.countdownVal = 0; f.countdownActive = false;
+  f.autoPhase = null;
+  f.countdownVal = 0;
   if(step.niveau.doelType==="seconden"){ f.secRunning=false; f.inputVal=f.secElapsed; }
   else { f.holdRunning=false; f.inputVal=f.autoRepsCompleted; }
   render();
@@ -1273,7 +1279,7 @@ function renderSetStep(step){
   }
   const isSeconden = step.niveau.doelType==="seconden";
   const autoCapable = isAutoCapable(step);
-  if(f.inputVal===null && !f.autoMode){ f.inputVal = step.max; }
+  if(f.inputVal===null && !f.autoPhase){ f.inputVal = step.max; }
 
   if(f.autoRun && !f.autoStarted && !f.pausedForDetail){
     f.autoStarted = true;
@@ -1283,12 +1289,15 @@ function renderSetStep(step){
   const setLabel = step.totalSets>1 ? `Set ${step.set} van ${step.totalSets}` : "Set";
   let timerBlock = "";
   let showManualControls = true;
-  if(f.countdownActive){
+  if(f.autoPhase === "announcing"){
+    showManualControls = false;
+    timerBlock = `<p class="center muted" style="margin:28px 0">Klaar maken…</p>`;
+  } else if(f.autoPhase === "counting"){
     showManualControls = false;
     timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${Math.round((3-f.countdownVal)/3*100)}"><div class="inner"><div class="time" id="wf-time">${f.countdownVal}</div><div class="muted small">klaarmaken</div></div></div>`;
   } else if(isSeconden){
     const pct = f.secTotal ? Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)) : 0;
-    if(f.autoMode && f.secRunning){
+    if(f.autoPhase === "active" && f.secRunning){
       showManualControls = false;
       timerBlock = `<div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.secElapsed}s</div><div class="muted small">automatisch</div></div></div>
       <div class="row" style="justify-content:center;margin-bottom:14px">
@@ -1305,7 +1314,7 @@ function renderSetStep(step){
     }
   } else if(step.niveau.holdSec){
     const pct = f.holdTotal ? Math.round((1-f.holdRemaining/f.holdTotal)*100) : 0;
-    if(f.autoMode){
+    if(f.autoPhase === "active"){
       showManualControls = false;
       timerBlock = `<p class="center muted small" style="margin-bottom:4px">Automatisch — rep ${Math.min(f.autoRepsCompleted+1, step.max)} van ${step.max}</p>
       <div class="row" style="justify-content:center;align-items:center;gap:14px;margin-bottom:10px">
@@ -2055,8 +2064,8 @@ function restoreFlowIfAny(){
     secTimer:null, secElapsed:0, secTotal:0, secRunning:false,
     inputVal:null,
     autoRun: snap.autoRun!==false,
-    autoTimer:null, autoMode:false, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, countdownActive:false, pausedForDetail:false
+    autoTimer:null, autoPhase:null, autoStarted:false, autoRepsCompleted:0,
+    countdownTimer:null, countdownVal:0, pausedForDetail:false
   };
 }
 
