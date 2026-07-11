@@ -1080,6 +1080,7 @@ function beginStepAction(step){
     if(step.niveau.doelType==="seconden") startAutoSeconden(); else startAutoReps();
   } else {
     f.autoPhase = null;
+    speak("Start.");
     render();
   }
 }
@@ -1107,10 +1108,13 @@ function startAutoSeconden(){
   f.secElapsed = 0;
   f.secRunning = true;
   render();
+  const startedAt = Date.now();
   f.secTimer = setInterval(()=>{
-    f.secElapsed++;
-    if(f.secTotal>15 && f.secElapsed===f.secTotal-10) speak("Nog tien seconden.");
-    if(f.secElapsed >= f.secTotal){
+    const prevElapsed = f.secElapsed;
+    const elapsed = Math.min(f.secTotal, Math.floor((Date.now()-startedAt)/1000));
+    f.secElapsed = elapsed;
+    if(f.secTotal>15 && prevElapsed<f.secTotal-10 && elapsed>=f.secTotal-10) speak("Nog tien seconden.");
+    if(elapsed >= f.secTotal){
       clearInterval(f.secTimer); f.secTimer=null;
       f.secRunning = false; f.autoPhase = null;
       if(navigator.vibrate) navigator.vibrate(200);
@@ -1119,27 +1123,43 @@ function startAutoSeconden(){
       logCurrentSet();
       return;
     }
-    patchWfTimer(Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)), f.secElapsed+"s");
+    patchWfTimer(Math.min(100, Math.round((elapsed/f.secTotal)*100)), elapsed+"s");
   },1000);
 }
 function startAutoReps(){
   const f = ui.flow;
   const step = currentStep();
-  const holdSec = step.niveau.holdSec;
-  const target = step.max;
   f.autoRepsCompleted = 0;
+  doAutoRep(step);
+}
+// Eén hold-rep: eerst "Vast." laten uitspreken (ring blijft bevroren op de volle tijd, f.holdRunning
+// staat nog op false), en pas als de spraak écht klaar is de aftel-ring laten lopen. Zelfde reden als
+// bij het rust-scherm: anders loopt de ring al terwijl "Vast." nog wordt gezegd.
+function doAutoRep(step){
+  const f = ui.flow;
+  const holdSec = step.niveau.holdSec;
   f.holdTotal = holdSec;
   f.holdRemaining = holdSec;
-  f.holdRunning = true;
-  speak("Vast.");
+  f.holdRunning = false;
   render();
-  autoRepTick(holdSec, target);
+  speak("Vast.", () => {
+    setTimeout(() => {
+      if(!ui.flow || currentStep()!==step) return;
+      f.holdRunning = true;
+      render();
+      tickAutoRep(step);
+    }, 0);
+  });
 }
-function autoRepTick(holdSec, target){
+function tickAutoRep(step){
   const f = ui.flow;
+  const holdSec = step.niveau.holdSec;
+  const target = step.max;
+  const endAt = Date.now() + holdSec*1000;
   f.autoTimer = setInterval(()=>{
-    f.holdRemaining--;
-    if(f.holdRemaining<=0){
+    const remaining = Math.max(0, Math.ceil((endAt-Date.now())/1000));
+    f.holdRemaining = remaining;
+    if(remaining<=0){
       clearInterval(f.autoTimer); f.autoTimer=null;
       f.holdRunning = false;
       f.autoRepsCompleted++;
@@ -1152,16 +1172,14 @@ function autoRepTick(holdSec, target){
         return;
       }
       speak("Los.");
-      f.autoTimer = setTimeout(()=>{
-        f.holdRunning = true;
-        f.holdRemaining = holdSec;
-        speak("Vast.");
-        autoRepTick(holdSec, target);
-      }, 1800);
       render();
+      f.autoTimer = setTimeout(()=>{
+        if(!ui.flow || currentStep()!==step) return;
+        doAutoRep(step);
+      }, 1800);
       return;
     }
-    patchWfTimer(Math.round((1-f.holdRemaining/holdSec)*100), f.holdRemaining+"s");
+    patchWfTimer(Math.round((1-remaining/holdSec)*100), remaining+"s");
   },1000);
 }
 function stopAuto(){
@@ -1255,31 +1273,44 @@ function renderRestStep(step){
   const f = ui.flow;
   if(f.restTotal===0){
     f.restTotal=step.sec; f.restRemaining=step.sec;
-    speak(`Rust, ${step.sec} seconden.`);
-    startRestTimer();
+    // De ring bevriest op de volle tijd tot "Rust, N seconden" écht is uitgesproken — anders telt
+    // hij al af terwijl de zin nog bezig is, dezelfde soort mismatch als bij de set-aankondiging.
+    speak(`Rust, ${step.sec} seconden.`, () => {
+      setTimeout(() => {
+        if(!ui.flow || currentStep()!==step) return;
+        startRestTimer();
+        render();
+      }, 0);
+    });
   }
   const pct = Math.round((1 - f.restRemaining/f.restTotal)*100);
   return `<div class="screen center">
     ${flowControls()}
     ${progressDots()}
     <h2 style="margin-top:20px">Rust</h2>
-    <div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.restRemaining}s</div><div class="muted small">rust</div></div></div>
+    <div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.restRemaining}s</div><div class="muted small">${f.timer?"rust":"zo"}</div></div></div>
     <button class="btn btn-primary btn-block btn-huge" data-action="rest-skip">Overslaan</button>
   </div>`;
 }
+// Rekent de resterende tijd elke tick uit vanaf een vast eindtijdstip (Date.now()-gebaseerd) i.p.v.
+// een teller die per tick met 1 afneemt. Zo blijft de klok kloppen ook als de browser de pagina
+// op de achtergrond afremt: bij terugkeer toont de eerstvolgende tick meteen de juiste resterende
+// tijd, in plaats van vanaf een verouderde stand verder te tellen.
 function startRestTimer(){
   const f = ui.flow;
+  const endAt = Date.now() + f.restTotal*1000;
   f.timer = setInterval(()=>{
-    f.restRemaining--;
-    if(f.restRemaining===10 && f.restTotal>15) speak("Nog tien seconden.");
-    if(f.restRemaining<=0){
+    const prevRemaining = f.restRemaining;
+    const remaining = Math.max(0, Math.ceil((endAt-Date.now())/1000));
+    f.restRemaining = remaining;
+    if(prevRemaining>10 && remaining<=10 && f.restTotal>15) speak("Nog tien seconden.");
+    if(remaining<=0){
       clearInterval(f.timer); f.timer=null;
       if(navigator.vibrate) navigator.vibrate(200);
       f.restTotal=0; f.restRemaining=0;
-      speak("Ga verder.");
       advanceStep();
     } else {
-      patchWfTimer(Math.round((1-f.restRemaining/f.restTotal)*100), f.restRemaining+"s");
+      patchWfTimer(Math.round((1-remaining/f.restTotal)*100), remaining+"s");
     }
   },1000);
 }
@@ -1383,8 +1414,9 @@ function secStart(){
   const f = ui.flow;
   f.secTotal = currentStep().max;
   f.secRunning = true;
+  const startedAt = Date.now() - f.secElapsed*1000; // "Hervat" telt door vanaf de eerder opgebouwde tijd
   f.secTimer = setInterval(()=>{
-    f.secElapsed++;
+    f.secElapsed = Math.floor((Date.now()-startedAt)/1000);
     patchWfTimer(Math.min(100, Math.round((f.secElapsed/f.secTotal)*100)), f.secElapsed+"s");
   },1000);
   render();
@@ -1407,16 +1439,18 @@ function holdStart(){
   f.holdTotal = step.niveau.holdSec;
   f.holdRemaining = step.niveau.holdSec;
   f.holdRunning = true;
+  const endAt = Date.now() + f.holdTotal*1000;
   f.holdTimer = setInterval(()=>{
-    f.holdRemaining--;
-    if(f.holdRemaining<=0){
+    const remaining = Math.max(0, Math.ceil((endAt-Date.now())/1000));
+    f.holdRemaining = remaining;
+    if(remaining<=0){
       clearInterval(f.holdTimer); f.holdTimer=null;
       if(navigator.vibrate) navigator.vibrate(150);
       f.holdRunning=false; f.holdTotal=0;
       render();
       return;
     }
-    patchWfTimer(Math.round((1-f.holdRemaining/f.holdTotal)*100), f.holdRemaining+"s");
+    patchWfTimer(Math.round((1-remaining/f.holdTotal)*100), remaining+"s");
   },1000);
   render();
 }
@@ -2102,6 +2136,9 @@ function restoreFlowIfAny(){
     autoTimer:null, autoPhase:null, autoStarted:false, autoRepsCompleted:0,
     countdownTimer:null, countdownVal:0, pausedForDetail:false
   };
+  // Zonder dit blijft het scherm-aan-houden uit na een herlaad middenin een workout — precies het
+  // scenario waarvoor deze herstelfunctie bestaat (bijv. terug van een achtergrond-app of YouTube).
+  acquireWakeLock();
 }
 
 /* ===================== INIT ===================== */
