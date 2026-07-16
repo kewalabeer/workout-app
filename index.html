@@ -106,6 +106,8 @@ input,select{font:inherit;}
   color:var(--text);font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
 }
 .stepper button:active{background:var(--primary-dim);}
+.figure-wrap{background:var(--card2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;padding:10px;margin-bottom:12px;overflow:hidden;}
+.figure-wrap img{width:100%;max-width:280px;max-height:220px;height:auto;object-fit:contain;display:block;border-radius:calc(var(--radius) - 4px);}
 .progress-dots{display:flex;gap:5px;justify-content:center;margin:10px 0 4px 0;flex-wrap:wrap;}
 .progress-dots span{width:8px;height:8px;border-radius:50%;background:var(--border);}
 .progress-dots span.done{background:var(--primary);}
@@ -167,7 +169,7 @@ a{color:var(--primary);}
 /* ===================== DATA: programma blok 1 ===================== */
 const OEFENINGEN = [
   {
-    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", afbeelding:"https://acupuntura.com/en/exercises/mcgill-curl-up/", video:"https://www.youtube.com/watch?v=_tz9WGVH25g",
+    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", afbeelding:"https://acupuntura.com/en/exercises/mcgill-curl-up/", afbeeldingImg:"https://acupuntura.com/images/exercises/mcgill-curl-up.jpg", video:"https://www.youtube.com/watch?v=_tz9WGVH25g",
     niveaus:[
       {n:1,naam:"Basis",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
       {n:2,naam:"Ellebogen los van de vloer",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
@@ -189,7 +191,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/100/side-plank-modified/", video:"https://www.youtube.com/watch?v=rCxF2nG9vQ0",
+    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/100/side-plank-modified/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/100-1.jpg", video:"https://www.youtube.com/watch?v=rCxF2nG9vQ0",
     niveaus:[
       {n:1,naam:"Vanaf de knieën",doelType:"seconden",min:10,max:20,perKant:true},
       {n:2,naam:"Vanaf de knieën, langer",doelType:"seconden",min:20,max:35,perKant:true},
@@ -210,7 +212,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", afbeelding:"https://www.nasm.org/resource-center/exercise-library/bird-dog", video:"https://www.youtube.com/watch?v=ZdAHe9_HeEw",
+    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", afbeelding:"https://commons.wikimedia.org/wiki/File:Birddog_exercise.svg", afbeeldingImg:"https://commons.wikimedia.org/wiki/Special:FilePath/Birddog_exercise.svg", video:"https://www.youtube.com/watch?v=ZdAHe9_HeEw",
     niveaus:[
       {n:1,naam:"Alleen arm óf been strekken",doelType:"reps",min:6,max:10,holdSec:null,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:5,max:8,holdSec:3,perKant:true},
@@ -232,7 +234,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"squat", naam:"Squat", patroon:"squat", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/", video:"https://www.youtube.com/watch?v=DlS-GAF8Edg",
+    id:"squat", naam:"Squat", patroon:"squat", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/135-1.jpg", video:"https://www.youtube.com/watch?v=DlS-GAF8Edg",
     niveaus:[
       {n:1,naam:"Box squat naar stoel",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Vrije squat tot dijen horizontaal",doelType:"reps",min:8,max:12,perKant:false},
@@ -253,7 +255,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"pushup", naam:"Push-up progressie", patroon:"push", afbeelding:"https://blog.nasm.org/nasm-guide-to-push-ups/push-up-progressions", video:"https://www.youtube.com/watch?v=tf3VNkmzHq0",
+    id:"pushup", naam:"Push-up progressie", patroon:"push", afbeelding:"https://commons.wikimedia.org/wiki/File:Pushups.gif", afbeeldingImg:"https://commons.wikimedia.org/wiki/Special:FilePath/Pushups.gif", video:"https://www.youtube.com/watch?v=tf3VNkmzHq0",
     niveaus:[
       {n:1,naam:"Tegen de muur",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Handen op aanrecht of tafel",doelType:"reps",min:8,max:12,perKant:false},
@@ -274,7 +276,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"row", naam:"Band row", patroon:"pull", afbeelding:"https://www.rehabhero.ca/exercise/standing-banded-row", video:"https://www.youtube.com/watch?v=db43OS-4ruY",
+    id:"row", naam:"Band row", patroon:"pull", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/335/standing-row/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/335-1.jpg", video:"https://www.youtube.com/watch?v=db43OS-4ruY",
     niveaus:[
       {n:1,naam:"Ruime speling in de band",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Band korter gepakt, meer spanning",doelType:"reps",min:8,max:12,perKant:false},
@@ -295,7 +297,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/", video:"https://www.youtube.com/watch?v=nuapk_-Q2BI",
+    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/49-1.jpg", video:"https://www.youtube.com/watch?v=nuapk_-Q2BI",
     niveaus:[
       {n:1,naam:"Tweebenig",doelType:"reps",min:10,max:15,perKant:false},
       {n:2,naam:"Met 3s hold bovenin",doelType:"reps",min:10,max:12,holdSec:3,perKant:false},
@@ -315,7 +317,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", afbeelding:"https://www.nasm.org/resource-center/exercise-library/dead-bug", video:"https://www.youtube.com/watch?v=bxn9FBrt4-A",
+    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/147/supine-dead-bug/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/147-1.jpg", video:"https://www.youtube.com/watch?v=bxn9FBrt4-A",
     niveaus:[
       {n:1,naam:"Alleen benen",doelType:"reps",min:8,max:12,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:6,max:10,perKant:true},
@@ -335,7 +337,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/", video:"https://www.youtube.com/watch?v=A2b2EmIg0dA",
+    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/", afbeeldingImg:"https://ik.imagekit.io/02fmeo4exvw/exercise-library/large/32-1.jpg", video:"https://www.youtube.com/watch?v=A2b2EmIg0dA",
     niveaus:[
       {n:1,naam:"Op de knieën",doelType:"seconden",min:20,max:30,perKant:false},
       {n:2,naam:"Volledig",doelType:"seconden",min:20,max:35,perKant:false},
@@ -429,6 +431,19 @@ function loadState(){
     if(typeof parsed.instellingen.azureRegion==="undefined") parsed.instellingen.azureRegion = null;
     if(!parsed.instellingen.azureVoice) parsed.instellingen.azureVoice = "nl-NL-FennaNeural";
     if(typeof parsed.instellingen.spotifyUrl==="undefined") parsed.instellingen.spotifyUrl = null;
+    // Bestaande gebruikers hebben hun programma (incl. oefeningen) al opgeslagen vóórdat afbeeldingImg/
+    // afbeelding/video bestonden of verbeterd zijn. Vul alleen ontbrekende velden aan vanuit de
+    // ingebouwde OEFENINGEN-catalogus (op id) — een custom/geïmporteerd programma met eigen links
+    // wordt nooit overschreven, alleen aangevuld waar een veld leeg is.
+    if(parsed.programma && Array.isArray(parsed.programma.oefeningen)){
+      parsed.programma.oefeningen.forEach(o=>{
+        const bron = OEFENINGEN.find(b=>b.id===o.id);
+        if(!bron) return;
+        if(!o.afbeeldingImg && bron.afbeeldingImg) o.afbeeldingImg = bron.afbeeldingImg;
+        if(!o.afbeelding && bron.afbeelding) o.afbeelding = bron.afbeelding;
+        if(!o.video && bron.video) o.video = bron.video;
+      });
+    }
     return parsed;
   }catch(e){ return defaultState(); }
 }
@@ -501,15 +516,21 @@ function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-// Referentiemateriaal (video + afbeelding) linkt altijd naar een externe, geverifieerde bron — zie
-// referentieLinks(). Geen inline tekening/animatie meer: die voegde volgens gebruikersfeedback niks
+// Referentiemateriaal: een echte, geverifieerde foto/gif staat direct in beeld (oef.afbeeldingImg),
+// gelinkt naar de bronpagina (oef.afbeelding) voor attributie en meer context. De video blijft een
+// externe knop — geen embed, dat zou alsnog een verbinding vereisen bij het openen van de app (zie
+// briefing, punt 2). Geen inline tekening/animatie meer: die voegde volgens gebruikersfeedback niks
 // toe (er viel niks aan af te leiden) en een losse SVG kan een echte foto/gif toch nooit evenaren.
+function referentieAfbeelding(oef){
+  if(!oef.afbeeldingImg) return "";
+  const bron = oef.afbeelding || oef.afbeeldingImg;
+  return `<a class="figure-wrap" href="${escapeHtml(bron)}" target="_blank" rel="noopener">
+    <img src="${escapeHtml(oef.afbeeldingImg)}" alt="${escapeHtml(oef.naam)}" onerror="this.closest('a').style.display='none'">
+  </a>`;
+}
 function referentieLinks(oef){
   const videoUrl = oef.video || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie"));
-  const afbeeldingBtn = oef.afbeelding
-    ? `<a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${escapeHtml(oef.afbeelding)}" target="_blank" rel="noopener">Bekijk voorbeeldafbeelding (opent extern)</a>`
-    : "";
-  return `${afbeeldingBtn}<a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${videoUrl}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>`;
+  return `<a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${videoUrl}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>`;
 }
 
 /* ===================== RENDER ROOT ===================== */
@@ -1396,6 +1417,7 @@ function renderSetStep(step){
       </div>
       <button class="icon-btn" data-action="open-uitleg" data-oefening="${oef.id}" aria-label="Volledige uitleg">i</button>
     </div>
+    ${referentieAfbeelding(oef)}
     <p class="center">${doelLabel(step)}</p>
     ${timerBlock}
     ${showManualControls && !isSeconden ? `<div class="stepper">
@@ -1612,6 +1634,7 @@ function renderUitlegBody(oefeningId){
   const u = oef.uitleg;
   const niveau = huidigNiveau(oefeningId);
   return `<p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
+      ${referentieAfbeelding(oef)}
       <p>${escapeHtml(u.kort)}</p>
       ${referentieLinks(oef)}
       <p class="fine" style="margin-top:0;margin-bottom:14px">Bekijk bij een oefening die je nog nooit deed sowieso een video of foto van een expert voordat je begint. Een specifieke link kan later offline of verwijderd zijn — zoek in dat geval opnieuw op "${escapeHtml(oef.naam)}".</p>
@@ -1846,7 +1869,7 @@ function renderInstellingen(){
 }
 
 /* ===================== EXPORT & IMPORT (F7, punt 9) ===================== */
-const ANALYSE_PROMPT = `Hierbij de export van mijn workout-app (JSON). Analyseer mijn progressie en stel het volgende programmablok samen (4 tot 6 weken). Regels: houd de McGill Big 3 als vaste kern; feedback "te makkelijk" versnelt progressie, "te zwaar" vertraagt, oefeningen met vervangingsmarkering of herhaald "voelde niet lekker" vervang je door een alternatief binnen hetzelfde bewegingspatroon; houd rekening met de seizoensinstelling; ik train thuis zonder materiaal, adviseer alleen bij duidelijke meerwaarde een aanschaf (zoals een weerstandsband) en vraag dat eerst. Onderbouw je keuzes kort. Lever daarna het nieuwe blok als één JSON-codeblok met exact deze structuur: { "schemaVersion": 1, "programma": { ... } }, inclusief volledige Nederlandse uitlegteksten per oefening (kort, uitvoering, fouten, spieren, stoppen) en startNiveau per oefening. Nieuwe oefeningen krijgen "video" en "afbeelding": null tenzij je een echte, geverifieerde YouTube-video en referentiepagina met foto kan linken die exact bij de oefening past (geen zoeklinks, geen gegokte URL's) — noem het anders expliciet zodat ik zelf een link kan aanleveren.`;
+const ANALYSE_PROMPT = `Hierbij de export van mijn workout-app (JSON). Analyseer mijn progressie en stel het volgende programmablok samen (4 tot 6 weken). Regels: houd de McGill Big 3 als vaste kern; feedback "te makkelijk" versnelt progressie, "te zwaar" vertraagt, oefeningen met vervangingsmarkering of herhaald "voelde niet lekker" vervang je door een alternatief binnen hetzelfde bewegingspatroon; houd rekening met de seizoensinstelling; ik train thuis zonder materiaal, adviseer alleen bij duidelijke meerwaarde een aanschaf (zoals een weerstandsband) en vraag dat eerst. Onderbouw je keuzes kort. Lever daarna het nieuwe blok als één JSON-codeblok met exact deze structuur: { "schemaVersion": 1, "programma": { ... } }, inclusief volledige Nederlandse uitlegteksten per oefening (kort, uitvoering, fouten, spieren, stoppen) en startNiveau per oefening. Nieuwe oefeningen krijgen "video", "afbeelding" en "afbeeldingImg": null tenzij je een echte, geverifieerde YouTube-video en een directe afbeeldings-URL (plus de bronpagina daarvan als "afbeelding") kan linken die exact bij de oefening past (geen zoeklinks, geen gegokte URL's) — noem het anders expliciet zodat ik zelf een link kan aanleveren.`;
 function renderExport(){
   return `<div class="screen">
     ${state.programma.blokreviewGedaan ? `<div class="banner" style="background:var(--primary-dim);color:var(--primary)">Blok afgerond. Exporteer je data en gebruik de prompt hieronder om je volgende blok te laten samenstellen.</div>` : ""}
