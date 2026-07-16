@@ -88,7 +88,7 @@ Eén JSON-object, bewaard in `localStorage` onder de sleutel
         "id": "curlup",
         "naam": "McGill curl-up",
         "patroon": "anti-extensie",
-        "animatie": "curlup",
+        "afbeelding": "https://voorbeeld.example/curlup",
         "startNiveau": 1,
         "niveaus": [
           { "n": 1, "naam": "Basis", "doelType": "holds", "min": 4, "max": 6, "holdSec": 8, "perKant": false }
@@ -175,17 +175,21 @@ Eén JSON-object, bewaard in `localStorage` onder de sleutel
 - `oefeningen[].startNiveau` — alleen relevant bij import: het niveau
   waarmee de oefening in het nieuwe blok start (zie Import hieronder).
   Ontbreekt dit veld, dan start de oefening op niveau 1.
-- `oefeningen[].animatie` — sleutel naar de ingebouwde SVG-animatie
-  (zie `ANIMATIONS` in `index.html`). Nieuwe oefeningen die nog geen
-  animatie hebben, krijgen `"animatie": null`; de app toont dan een
-  neutrale placeholder in plaats van een geanimeerde stick figure.
+- `oefeningen[].afbeelding` (optioneel) — URL naar een bestaande, geverifieerde
+  referentiepagina met een echte foto/gif van de oefening (bijv. een
+  gerenommeerde exercise-library-pagina), getoond als externe link (opent in
+  een nieuw tabblad) boven de video-link. Er is bewust geen ingebouwde
+  tekening/animatie meer: die voegde volgens gebruikersfeedback niets toe.
+  Ontbreekt dit veld, dan wordt alleen de video-knop getoond.
 - `oefeningen[].video` (optioneel) — directe YouTube-URL naar een
   uitlegvideo van die oefening, getoond als externe link (opent in een
   nieuw tabblad) bovenaan de volledige uitleg. Ontbreekt dit veld, dan
   valt de app terug op een YouTube-zoeklink met de oefeningnaam. Geen
   video embedden — dat zou alsnog een verbinding vereisen bij het
   openen van de app en een licentierisico met zich meebrengen (zie
-  briefing, punt 2).
+  briefing, punt 2). Zowel `video` als `afbeelding` moeten een echte,
+  geverifieerde, exact bij de oefening passende bron zijn — nooit een
+  gegokte URL.
 
 **`instellingen`** (aanvullend op de functionele instellingen)
 - `autoRun` (boolean, default `true`) — of oefeningen met een vaste

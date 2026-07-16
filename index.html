@@ -106,16 +106,6 @@ input,select{font:inherit;}
   color:var(--text);font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
 }
 .stepper button:active{background:var(--primary-dim);}
-.figure-wrap{
-  background:var(--card2);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;
-  padding:10px;margin-bottom:12px;
-}
-.figure-wrap svg{width:100%;max-width:280px;height:auto;display:block;}
-.pose2{opacity:0;}
-.stickfig.animate .pose1{animation:stickA 2.4s steps(1) infinite;}
-.stickfig.animate .pose2{animation:stickB 2.4s steps(1) infinite;}
-@keyframes stickA{0%,54%{opacity:1;}55%,100%{opacity:0;}}
-@keyframes stickB{0%,54%{opacity:0;}55%,100%{opacity:1;}}
 .progress-dots{display:flex;gap:5px;justify-content:center;margin:10px 0 4px 0;flex-wrap:wrap;}
 .progress-dots span{width:8px;height:8px;border-radius:50%;background:var(--border);}
 .progress-dots span.done{background:var(--primary);}
@@ -177,7 +167,7 @@ a{color:var(--primary);}
 /* ===================== DATA: programma blok 1 ===================== */
 const OEFENINGEN = [
   {
-    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", animatie:"curlup", video:"https://www.youtube.com/watch?v=_tz9WGVH25g",
+    id:"curlup", naam:"McGill curl-up", patroon:"anti-extensie", afbeelding:"https://acupuntura.com/en/exercises/mcgill-curl-up/", video:"https://www.youtube.com/watch?v=_tz9WGVH25g",
     niveaus:[
       {n:1,naam:"Basis",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
       {n:2,naam:"Ellebogen los van de vloer",doelType:"holds",min:4,max:6,holdSec:8,perKant:false},
@@ -199,7 +189,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", animatie:"sideplank", video:"https://www.youtube.com/watch?v=rCxF2nG9vQ0",
+    id:"sideplank", naam:"Side plank", patroon:"anti-rotatie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/100/side-plank-modified/", video:"https://www.youtube.com/watch?v=rCxF2nG9vQ0",
     niveaus:[
       {n:1,naam:"Vanaf de knieën",doelType:"seconden",min:10,max:20,perKant:true},
       {n:2,naam:"Vanaf de knieën, langer",doelType:"seconden",min:20,max:35,perKant:true},
@@ -220,7 +210,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", animatie:"birddog", video:"https://www.youtube.com/watch?v=ZdAHe9_HeEw",
+    id:"birddog", naam:"Bird dog", patroon:"anti-rotatie", afbeelding:"https://www.nasm.org/resource-center/exercise-library/bird-dog", video:"https://www.youtube.com/watch?v=ZdAHe9_HeEw",
     niveaus:[
       {n:1,naam:"Alleen arm óf been strekken",doelType:"reps",min:6,max:10,holdSec:null,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:5,max:8,holdSec:3,perKant:true},
@@ -242,7 +232,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"squat", naam:"Squat", patroon:"squat", animatie:"squat", video:"https://www.youtube.com/watch?v=DlS-GAF8Edg",
+    id:"squat", naam:"Squat", patroon:"squat", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/", video:"https://www.youtube.com/watch?v=DlS-GAF8Edg",
     niveaus:[
       {n:1,naam:"Box squat naar stoel",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Vrije squat tot dijen horizontaal",doelType:"reps",min:8,max:12,perKant:false},
@@ -263,7 +253,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"pushup", naam:"Push-up progressie", patroon:"push", animatie:"pushup", video:"https://www.youtube.com/watch?v=tf3VNkmzHq0",
+    id:"pushup", naam:"Push-up progressie", patroon:"push", afbeelding:"https://blog.nasm.org/nasm-guide-to-push-ups/push-up-progressions", video:"https://www.youtube.com/watch?v=tf3VNkmzHq0",
     niveaus:[
       {n:1,naam:"Tegen de muur",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Handen op aanrecht of tafel",doelType:"reps",min:8,max:12,perKant:false},
@@ -284,7 +274,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"row", naam:"Band row", patroon:"pull", animatie:"row", video:"https://www.youtube.com/watch?v=db43OS-4ruY",
+    id:"row", naam:"Band row", patroon:"pull", afbeelding:"https://www.rehabhero.ca/exercise/standing-banded-row", video:"https://www.youtube.com/watch?v=db43OS-4ruY",
     niveaus:[
       {n:1,naam:"Ruime speling in de band",doelType:"reps",min:8,max:12,perKant:false},
       {n:2,naam:"Band korter gepakt, meer spanning",doelType:"reps",min:8,max:12,perKant:false},
@@ -305,7 +295,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", animatie:"glutebridge", video:"https://www.youtube.com/watch?v=nuapk_-Q2BI",
+    id:"glutebridge", naam:"Glute bridge", patroon:"heupscharnier", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/", video:"https://www.youtube.com/watch?v=nuapk_-Q2BI",
     niveaus:[
       {n:1,naam:"Tweebenig",doelType:"reps",min:10,max:15,perKant:false},
       {n:2,naam:"Met 3s hold bovenin",doelType:"reps",min:10,max:12,holdSec:3,perKant:false},
@@ -325,7 +315,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", animatie:"deadbug", video:"https://www.youtube.com/watch?v=bxn9FBrt4-A",
+    id:"deadbug", naam:"Dead bug", patroon:"anti-extensie", afbeelding:"https://www.nasm.org/resource-center/exercise-library/dead-bug", video:"https://www.youtube.com/watch?v=bxn9FBrt4-A",
     niveaus:[
       {n:1,naam:"Alleen benen",doelType:"reps",min:8,max:12,perKant:true},
       {n:2,naam:"Tegengestelde arm en been",doelType:"reps",min:6,max:10,perKant:true},
@@ -345,7 +335,7 @@ const OEFENINGEN = [
     }
   },
   {
-    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", animatie:"frontplank", video:"https://www.youtube.com/watch?v=A2b2EmIg0dA",
+    id:"frontplank", naam:"Front plank", patroon:"anti-extensie", afbeelding:"https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/", video:"https://www.youtube.com/watch?v=A2b2EmIg0dA",
     niveaus:[
       {n:1,naam:"Op de knieën",doelType:"seconden",min:20,max:30,perKant:false},
       {n:2,naam:"Volledig",doelType:"seconden",min:20,max:35,perKant:false},
@@ -369,31 +359,31 @@ const WORKOUTS = [
     id:"hoofd", naam:"Hoofdworkout", type:"hoofd", duurMinTekst:"35 tot 40 min",
     warmingUp:["8x cat-camel","10x schouderrollen","10x heupcirkels per kant","8x lichte squat in rustig tempo"],
     oefeningen:[
-      {oefeningId:"curlup", sets:3, superset:null, rustSec:60},
-      {oefeningId:"sideplank", sets:3, superset:null, rustSec:60},
-      {oefeningId:"birddog", sets:3, superset:null, rustSec:60},
-      {oefeningId:"squat", sets:3, superset:"4", rustSec:60},
-      {oefeningId:"pushup", sets:3, superset:"4", rustSec:60},
-      {oefeningId:"row", sets:3, superset:"5", rustSec:60},
-      {oefeningId:"glutebridge", sets:3, superset:"5", rustSec:60}
+      {oefeningId:"curlup", sets:3, superset:null, rustSec:30},
+      {oefeningId:"sideplank", sets:3, superset:null, rustSec:30},
+      {oefeningId:"birddog", sets:3, superset:null, rustSec:30},
+      {oefeningId:"squat", sets:3, superset:"4", rustSec:30},
+      {oefeningId:"pushup", sets:3, superset:"4", rustSec:30},
+      {oefeningId:"row", sets:3, superset:"5", rustSec:30},
+      {oefeningId:"glutebridge", sets:3, superset:"5", rustSec:30}
     ]
   },
   {
     id:"microA", naam:"Micro-workout: Core kort", type:"micro", duurMinTekst:"10 min",
     warmingUp:["3x cat-camel als opwarming"],
     oefeningen:[
-      {oefeningId:"curlup", sets:2, superset:null, rustSec:45},
-      {oefeningId:"sideplank", sets:2, superset:null, rustSec:45},
-      {oefeningId:"birddog", sets:2, superset:null, rustSec:45}
+      {oefeningId:"curlup", sets:2, superset:null, rustSec:30},
+      {oefeningId:"sideplank", sets:2, superset:null, rustSec:30},
+      {oefeningId:"birddog", sets:2, superset:null, rustSec:30}
     ]
   },
   {
     id:"microB", naam:"Micro-workout: Romp en heup", type:"micro", duurMinTekst:"12 min",
     warmingUp:["3x cat-camel"],
     oefeningen:[
-      {oefeningId:"deadbug", sets:2, superset:null, rustSec:45},
-      {oefeningId:"frontplank", sets:2, superset:null, rustSec:45},
-      {oefeningId:"glutebridge", sets:2, superset:null, rustSec:45}
+      {oefeningId:"deadbug", sets:2, superset:null, rustSec:30},
+      {oefeningId:"frontplank", sets:2, superset:null, rustSec:30},
+      {oefeningId:"glutebridge", sets:2, superset:null, rustSec:30}
     ]
   }
 ];
@@ -419,7 +409,7 @@ function defaultState(){
     onboarded:false,
     programma,
     voortgang: defaultVoortgang(programma),
-    instellingen:{trainingsdag:2, reminder:true, reminderTijd:"20:00", seizoen:true, lengteCm:null, laatsteExport:null, disclaimerGezien:false, autoRun:true, spraak:true, azureKey:null, azureRegion:null, azureVoice:"nl-NL-FennaNeural"},
+    instellingen:{trainingsdag:2, reminder:true, reminderTijd:"20:00", seizoen:true, lengteCm:null, laatsteExport:null, disclaimerGezien:false, autoRun:true, spraak:true, azureKey:null, azureRegion:null, azureVoice:"nl-NL-FennaNeural", spotifyUrl:null},
     log:{sessies:[], gewicht:[], overgeslagenWeken:[], blokreviews:[]}
   };
 }
@@ -438,6 +428,7 @@ function loadState(){
     if(typeof parsed.instellingen.azureKey==="undefined") parsed.instellingen.azureKey = null;
     if(typeof parsed.instellingen.azureRegion==="undefined") parsed.instellingen.azureRegion = null;
     if(!parsed.instellingen.azureVoice) parsed.instellingen.azureVoice = "nl-NL-FennaNeural";
+    if(typeof parsed.instellingen.spotifyUrl==="undefined") parsed.instellingen.spotifyUrl = null;
     return parsed;
   }catch(e){ return defaultState(); }
 }
@@ -510,83 +501,15 @@ function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-/* ===================== STICK FIGURE SVG ===================== */
-function seg(p1,p2){ return `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>`; }
-function poseLines(pose){
-  let out = `<circle cx="${pose.head[0]}" cy="${pose.head[1]}" r="9" fill="currentColor"/>`;
-  if(pose.shoulder && pose.hip) out += seg(pose.shoulder,pose.hip);
-  if(pose.shoulder && pose.elbow) out += seg(pose.shoulder,pose.elbow);
-  if(pose.elbow && pose.hand) out += seg(pose.elbow,pose.hand);
-  if(pose.shoulder2 && pose.elbow2) out += seg(pose.shoulder2,pose.elbow2);
-  if(pose.elbow2 && pose.hand2) out += seg(pose.elbow2,pose.hand2);
-  if(pose.hip && pose.knee) out += seg(pose.hip,pose.knee);
-  if(pose.knee && pose.foot) out += seg(pose.knee,pose.foot);
-  if(pose.hip && pose.knee2) out += seg(pose.hip,pose.knee2);
-  if(pose.knee2 && pose.foot2) out += seg(pose.knee2,pose.foot2);
-  return out;
-}
-// Elke pose houdt de lengte van elk "bot" (schouder-elleboog, elleboog-hand, heup-knie, knie-voet)
-// gelijk tussen stand a en b — alleen de hoeken veranderen. Anders lijkt het of ledematen van lengte
-// veranderen tussen de standen, wat de belangrijkste reden was dat de vorige versie er niet klopte.
-const ANIMATIONS = {
-  curlup:{
-    context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[37,108],shoulder:[58,106],elbow:[72,108],hand:[88,110],hip:[100,108],knee:[85,85],foot:[100,115],knee2:[130,112],foot2:[165,116]},
-    b:{head:[38,97],shoulder:[60,97],elbow:[74,99],hand:[90,101],hip:[100,108],knee:[85,85],foot:[100,115],knee2:[130,112],foot2:[165,116]}
-  },
-  sideplank:{
-    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[55,75],shoulder:[70,80],elbow:[70,98],hand:[70,98],hip:[100,100],knee:[122,108],foot:[140,112]},
-    b:{head:[52,78],shoulder:[70,80],elbow:[70,98],hand:[70,98],hip:[104,78],knee:[128,76],foot:[150,74]}
-  },
-  birddog:{
-    context:'<line x1="15" y1="118" x2="195" y2="118" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[58,55],shoulder:[75,60],elbow:[75,80],hand:[75,98],hip:[130,62],knee:[130,80],foot:[130,98]},
-    b:{head:[58,55],shoulder:[75,60],elbow:[56,53],hand:[39,47],hip:[130,62],knee:[147,56],foot:[164,50]}
-  },
-  squat:{
-    context:'<line x1="15" y1="127" x2="195" y2="127" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[100,38],shoulder:[100,50],elbow:[94,64],hand:[88,76],hip:[100,75],knee:[100,100],foot:[100,125]},
-    b:{head:[73,88],shoulder:[80,98],elbow:[65,102],hand:[50,100],hip:[95,120],knee:[112,102],foot:[100,125]}
-  },
-  pushup:{
-    context:'<line x1="40" y1="30" x2="40" y2="115" stroke="currentColor" stroke-opacity=".2" stroke-width="6"/>',
-    a:{head:[38,60],shoulder:[56,64],elbow:[54,88],hand:[58,110],hip:[118,70],knee:[150,73],foot:[172,76]},
-    b:{head:[40,86],shoulder:[58,90],elbow:[36,96],hand:[58,110],hip:[118,92],knee:[150,94],foot:[172,96]}
-  },
-  row:{
-    context:'<rect x="140" y="50" width="8" height="26" fill="currentColor" fill-opacity=".2"/>',
-    a:{head:[75,50],shoulder:[80,65],elbow:[110,68],hand:[138,64],hip:[75,95],knee:[72,110],foot:[70,125]},
-    b:{head:[75,50],shoulder:[80,65],elbow:[55,78],hand:[78,85],hip:[75,95],knee:[72,110],foot:[70,125]}
-  },
-  glutebridge:{
-    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[40,100],shoulder:[56,100],elbow:[62,94],hand:[74,92],hip:[90,108],knee:[120,92],foot:[130,112]},
-    b:{head:[40,100],shoulder:[56,100],elbow:[62,94],hand:[74,92],hip:[90,86],knee:[122,90],foot:[130,112]}
-  },
-  deadbug:{
-    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[70,96],shoulder:[90,96],elbow:[90,70],hand:[90,46],hip:[120,96],knee:[120,70],foot:[98,72]},
-    b:{head:[70,96],shoulder:[90,96],elbow:[65,88],hand:[42,84],hip:[120,96],knee:[145,88],foot:[168,92]}
-  },
-  frontplank:{
-    context:'<line x1="15" y1="112" x2="195" y2="112" stroke="currentColor" stroke-opacity=".25" stroke-width="4"/>',
-    a:{head:[36,72],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,64],knee:[150,80],foot:[170,88]},
-    b:{head:[36,72],shoulder:[54,74],elbow:[54,100],hand:[54,105],hip:[112,85],knee:[150,86],foot:[170,88]}
-  }
-};
-function stickFigureSvg(animatieId, opts){
-  opts = opts||{};
-  const anim = ANIMATIONS[animatieId];
-  if(!anim){
-    return `<svg viewBox="0 0 200 140" class="stickfig"><circle cx="100" cy="70" r="26" fill="none" stroke="currentColor" stroke-width="4"/><text x="100" y="76" text-anchor="middle" font-size="11" fill="currentColor">geen animatie</text></svg>`;
-  }
-  const animate = opts.animate!==false;
-  return `<svg viewBox="0 0 200 140" class="stickfig ${animate?'animate':''}" style="color:var(--text)">
-    ${anim.context||""}
-    <g class="pose1">${poseLines(anim.a)}</g>
-    <g class="pose2">${poseLines(anim.b)}</g>
-  </svg>`;
+// Referentiemateriaal (video + afbeelding) linkt altijd naar een externe, geverifieerde bron — zie
+// referentieLinks(). Geen inline tekening/animatie meer: die voegde volgens gebruikersfeedback niks
+// toe (er viel niks aan af te leiden) en een losse SVG kan een echte foto/gif toch nooit evenaren.
+function referentieLinks(oef){
+  const videoUrl = oef.video || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie"));
+  const afbeeldingBtn = oef.afbeelding
+    ? `<a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${escapeHtml(oef.afbeelding)}" target="_blank" rel="noopener">Bekijk voorbeeldafbeelding (opent extern)</a>`
+    : "";
+  return `${afbeeldingBtn}<a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${videoUrl}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>`;
 }
 
 /* ===================== RENDER ROOT ===================== */
@@ -755,6 +678,7 @@ function renderVandaag(){
         <button class="btn btn-sm" data-action="open-microkeuze">Kies micro-workout</button>
         <button class="btn btn-sm" data-action="week-overslaan">Week overslaan</button>
       </div>
+      ${state.instellingen.spotifyUrl ? `<a class="btn btn-sm btn-ghost btn-block" style="margin-top:10px;text-decoration:none" href="${escapeHtml(state.instellingen.spotifyUrl)}" target="_blank" rel="noopener">🎵 Open playlist (Spotify)</a>` : ""}
     </div>
     <p class="fine center">${normTekst()}</p>
     <div class="row wrap" style="justify-content:center;margin-top:10px">
@@ -812,7 +736,7 @@ function buildSteps(workout){
         }
       });
       const isLast = (gi===groups.length-1) && (s===maxSets);
-      if(!isLast) steps.push({type:"rest", sec:group[0].rustSec||60});
+      if(!isLast) steps.push({type:"rest", sec:group[0].rustSec||30});
     }
   });
   return steps;
@@ -828,7 +752,7 @@ function startWorkout(workoutId){
     inputVal:null,
     autoRun: state.instellingen.autoRun!==false,
     autoTimer:null, autoPhase:null, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, pausedForDetail:false
+    countdownTimer:null, countdownVal:0, pausedForDetail:false, paused:false
   };
   acquireWakeLock();
   saveFlowSnapshot();
@@ -872,6 +796,34 @@ function pauseFlowForDetail(){
   stopSpeech();
   clearTimers();
   f.pausedForDetail = true;
+}
+// Handmatige pauze, beschikbaar gedurende de hele workout (warming-up, sets, rust). Rust hervat
+// gewoon vanaf de resterende tijd; een lopende aankondiging/aftelling/hold begint bij hervatten
+// opnieuw (zelfde reden als bij pauseFlowForDetail: halverwege hervatten geeft verwarrende halve
+// cues). Handmatige-reps-stappen hebben geen timer en blijven dus gewoon staan zoals de gebruiker
+// ze achterliet.
+function togglePause(){
+  if(ui.flow.paused) resumeWorkout(); else pauseWorkout();
+}
+function pauseWorkout(){
+  const f = ui.flow;
+  if(!f || f.paused) return;
+  stopSpeech();
+  clearTimers();
+  f.paused = true;
+  render();
+}
+function resumeWorkout(){
+  const f = ui.flow;
+  if(!f || !f.paused) return;
+  f.paused = false;
+  const step = currentStep();
+  if(step && step.type==="rest"){
+    if(f.restRemaining>0) resumeRestTimer();
+  } else if(step && f.autoPhase){
+    resetStepAutoState(f);
+  }
+  render();
 }
 function resumeFlowAfterDetail(){
   const f = ui.flow;
@@ -1047,30 +999,37 @@ function beginAnnounceAndCountdown(step){
     // laten doorlopen, anders zou dit een render() aanroepen middenin de render() die renderSetStep
     // net aan het opbouwen was (dezelfde reentrancy die eerder navigatie brak).
     setTimeout(() => {
-      if(!ui.flow || currentStep()!==step) return;
+      if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
       f.autoPhase = "counting";
       render();
       countdownTick(step);
     }, 0);
   });
 }
-// Elke tick toont en spreekt het HUIDIGE getal, en pas ná de wachttijd van dat getal wordt er
-// verder gegaan naar het volgende (of naar de echte start). Zo staat er nooit een render tussenin
-// die een halfklare hold-view laat zien terwijl het aftellen nog bezig is.
+// Elke tick toont en spreekt het HUIDIGE getal, en pas als de spraak voor dát getal écht is
+// afgerond (niet na een gegokte vaste tijd) gaat het verder naar het volgende getal of de echte
+// start. Een korte ondergrens (900ms) zorgt dat een getal ook zichtbaar blijft als spraak uitstaat
+// of razendsnel klaar is — anders zou "3, 2, 1" in een oogwenk voorbijflitsen.
 function countdownTick(step){
   const f = ui.flow;
-  if(!ui.flow || currentStep()!==step) return;
-  speak(String(f.countdownVal));
+  if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
   render();
-  f.countdownTimer = setTimeout(()=>{
-    if(f.countdownVal<=1){
+  const val = f.countdownVal;
+  let pending = 2;
+  const proceed = () => {
+    pending--;
+    if(pending>0) return;
+    if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
+    if(val<=1){
       f.countdownVal = 0;
       beginStepAction(step);
     } else {
-      f.countdownVal--;
+      f.countdownVal = val-1;
       countdownTick(step);
     }
-  }, 667);
+  };
+  speak(String(val), proceed);
+  f.countdownTimer = setTimeout(proceed, 900);
 }
 function beginStepAction(step){
   const f = ui.flow;
@@ -1085,8 +1044,8 @@ function beginStepAction(step){
   }
 }
 // Timer ticks patch just the ring/number instead of a full render() — a full render tears down and
-// rebuilds every node (incl. re-wiring all listeners and restarting the stick-figure CSS animation),
-// which is wasteful and visibly janky when it happens every second during a hold or rest.
+// rebuilds every node (incl. re-wiring all listeners), which is wasteful and visibly janky when it
+// happens every second during a hold or rest.
 function patchWfTimer(pct, timeText){
   const ring = document.getElementById("wf-ring");
   const time = document.getElementById("wf-time");
@@ -1097,6 +1056,7 @@ function patchWfTimer(pct, timeText){
 function flowControls(){
   const f = ui.flow;
   return `<div class="row wrap" style="justify-content:center;gap:8px;margin-bottom:6px">
+    <button class="btn btn-sm ${f.paused?"btn-primary":"btn-ghost"}" data-action="toggle-pause">${f.paused?"▶ Doorgaan":"⏸ Pauze"}</button>
     <button class="btn btn-sm ${f.autoRun?"":"btn-ghost"}" data-action="toggle-autorun">Automatisch: ${f.autoRun?"aan":"uit"}</button>
     <button class="btn btn-sm ${state.instellingen.spraak?"":"btn-ghost"}" data-action="toggle-spraak">Stem: ${state.instellingen.spraak?"aan":"uit"}</button>
   </div>`;
@@ -1144,7 +1104,7 @@ function doAutoRep(step){
   render();
   speak("Vast.", () => {
     setTimeout(() => {
-      if(!ui.flow || currentStep()!==step) return;
+      if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
       f.holdRunning = true;
       render();
       tickAutoRep(step);
@@ -1174,7 +1134,7 @@ function tickAutoRep(step){
       speak("Los.");
       render();
       f.autoTimer = setTimeout(()=>{
-        if(!ui.flow || currentStep()!==step) return;
+        if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
         doAutoRep(step);
       }, 1800);
       return;
@@ -1200,7 +1160,8 @@ function finishWorkout(){
   const oefeningIds = [...new Set(results.map(r=>r.oefeningId))];
   ui.afsluit = {
     workoutId, results, durMin,
-    feedback: Object.fromEntries(oefeningIds.map(id=>[id,"goed"]))
+    feedback: Object.fromEntries(oefeningIds.map(id=>[id,"goed"])),
+    vervang: Object.fromEntries(oefeningIds.map(id=>[id,false]))
   };
   ui.flow = null;
   clearSavedFlow();
@@ -1243,6 +1204,16 @@ function renderOefeningenOverzicht(workout){
 function renderWorkoutFlow(){
   const f = ui.flow;
   const workout = getWorkout(f.workoutId);
+  if(f.paused){
+    return `<div class="screen center">
+      ${flowControls()}
+      <div class="card center" style="margin-top:20px">
+        <h2>Gepauzeerd</h2>
+        <p class="muted">Tik op "Doorgaan" zodra je klaar bent.</p>
+      </div>
+      <button class="btn btn-ghost btn-block" data-action="stop-workout" style="margin-top:16px">Workout afbreken</button>
+    </div>`;
+  }
   if(f.warmup){
     if(!f.warmupAnnounced){ f.warmupAnnounced = true; speak("Warming-up. " + workout.warmingUp.join(". ")); }
     return `<div class="screen">
@@ -1251,6 +1222,7 @@ function renderWorkoutFlow(){
         <h2>Warming-up</h2>
         <div class="stack">${workout.warmingUp.map(w=>`<div><b>${escapeHtml(w)}</b><div class="muted small">${escapeHtml(warmupUitlegFor(w))}</div></div>`).join("")}</div>
       </div>
+      ${volgendeOefeningKader(f.steps[0], "Eerste oefening")}
       ${renderOefeningenOverzicht(workout)}
       <button class="btn btn-primary btn-block btn-huge" data-action="warmup-klaar">Warming-up gedaan</button>
       <button class="btn btn-ghost btn-block" data-action="stop-workout" style="margin-top:8px">Workout afbreken</button>
@@ -1269,6 +1241,23 @@ function progressDots(){
     return `<span class="${cls}"></span>`;
   }).join("")}</div>`;
 }
+// Zoekt de eerstvolgende "set"-stap na een gegeven index (rust-stappen worden overgeslagen). Wordt
+// gebruikt om tijdens rust en de warming-up alvast te tonen wat eraan komt, zodat je niet wordt
+// verrast door de volgende oefening en de gesproken start-cue niet mist.
+function nextSetStepAfter(index){
+  const f = ui.flow;
+  for(let i=index+1;i<f.steps.length;i++){ if(f.steps[i].type==="set") return f.steps[i]; }
+  return null;
+}
+function volgendeOefeningKader(step, label){
+  if(!step) return "";
+  const kantTxt = step.kant ? (step.kant==="links"?" — linkerkant":" — rechterkant") : "";
+  return `<div class="card" style="margin-top:10px">
+    <div class="muted small" style="margin-bottom:2px">${escapeHtml(label||"Volgende oefening")}</div>
+    <div style="font-weight:700">${escapeHtml(step.oefening.naam)}${kantTxt}</div>
+    <div class="muted small">${escapeHtml(doelLabel(step))}</div>
+  </div>`;
+}
 function renderRestStep(step){
   const f = ui.flow;
   if(f.restTotal===0){
@@ -1277,7 +1266,7 @@ function renderRestStep(step){
     // hij al af terwijl de zin nog bezig is, dezelfde soort mismatch als bij de set-aankondiging.
     speak(`Rust, ${step.sec} seconden.`, () => {
       setTimeout(() => {
-        if(!ui.flow || currentStep()!==step) return;
+        if(!ui.flow || currentStep()!==step || ui.flow.paused) return;
         startRestTimer();
         render();
       }, 0);
@@ -1289,7 +1278,8 @@ function renderRestStep(step){
     ${progressDots()}
     <h2 style="margin-top:20px">Rust</h2>
     <div class="timer-ring" id="wf-ring" style="--pct:${pct}"><div class="inner"><div class="time" id="wf-time">${f.restRemaining}s</div><div class="muted small">${f.timer?"rust":"zo"}</div></div></div>
-    <button class="btn btn-primary btn-block btn-huge" data-action="rest-skip">Overslaan</button>
+    ${volgendeOefeningKader(nextSetStepAfter(f.index))}
+    <button class="btn btn-primary btn-block btn-huge" data-action="rest-skip" style="margin-top:10px">Overslaan</button>
   </div>`;
 }
 // Rekent de resterende tijd elke tick uit vanaf een vast eindtijdstip (Date.now()-gebaseerd) i.p.v.
@@ -1297,8 +1287,14 @@ function renderRestStep(step){
 // op de achtergrond afremt: bij terugkeer toont de eerstvolgende tick meteen de juiste resterende
 // tijd, in plaats van vanaf een verouderde stand verder te tellen.
 function startRestTimer(){
+  runRestInterval(Date.now() + ui.flow.restTotal*1000);
+}
+// Gedeeld door startRestTimer (volledige rust) en resumeRestTimer (na een handmatige pauze): telt af
+// naar endAt, ongeacht of dat eindtijdstip berekend is vanaf de volle rustTotal of vanaf de resterende
+// tijd bij hervatten. f.restTotal blijft in beide gevallen ongewijzigd, dus de voortgangsring (die
+// restRemaining/restTotal gebruikt) blijft kloppend doorlopen in plaats van terug te springen naar 0%.
+function runRestInterval(endAt){
   const f = ui.flow;
-  const endAt = Date.now() + f.restTotal*1000;
   f.timer = setInterval(()=>{
     const prevRemaining = f.restRemaining;
     const remaining = Math.max(0, Math.ceil((endAt-Date.now())/1000));
@@ -1313,6 +1309,9 @@ function startRestTimer(){
       patchWfTimer(Math.round((1-remaining/f.restTotal)*100), remaining+"s");
     }
   },1000);
+}
+function resumeRestTimer(){
+  runRestInterval(Date.now() + ui.flow.restRemaining*1000);
 }
 function doelLabel(step){
   const {oefening,niveau,min,max,kant} = step;
@@ -1397,7 +1396,6 @@ function renderSetStep(step){
       </div>
       <button class="icon-btn" data-action="open-uitleg" data-oefening="${oef.id}" aria-label="Volledige uitleg">i</button>
     </div>
-    <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
     <p class="center">${doelLabel(step)}</p>
     ${timerBlock}
     ${showManualControls && !isSeconden ? `<div class="stepper">
@@ -1503,6 +1501,7 @@ function renderAfsluitenFeedback(a){
             return `<button class="${cls}" data-action="fb-set" data-oefening="${id}" data-val="${o.v}">${o.label}</button>`;
           }).join("")}
         </div>
+        <button class="btn btn-sm ${a.vervang[id]?"btn-primary":"btn-ghost"} btn-block" style="margin-top:8px" data-action="toggle-vervang" data-oefening="${id}">${a.vervang[id]?"✓ Wordt vervangen (zelfde spiergroep)":"Vervangen voor andere oefening, zelfde spiergroep"}</button>
       </div>`;
     }).join("")}
     <button class="btn btn-primary btn-block btn-huge" data-action="fb-confirm">Bevestigen</button>
@@ -1530,6 +1529,7 @@ function confirmSession(){
     if(fb==="te_zwaar") vg.zwaarTeller++; else vg.zwaarTeller=0;
     if(fb==="niet_lekker") vg.nietLekkerTeller++; else vg.nietLekkerTeller=0;
     if(vg.nietLekkerTeller>=2) vg.vervangingsmarkering=true;
+    if(a.vervang && a.vervang[id]) vg.vervangingsmarkering=true;
     const volgendNiveau = oef.niveaus.find(n=>n.n===vg.niveau+1);
     if(vg.promotieTeller>=2 && volgendNiveau){
       suggesties.push({id:"promo-"+id, oefeningId:id, type:"promotie", naarNiveau:volgendNiveau});
@@ -1612,10 +1612,9 @@ function renderUitlegBody(oefeningId){
   const u = oef.uitleg;
   const niveau = huidigNiveau(oefeningId);
   return `<p class="muted small">Huidig niveau: ${niveau.n} — ${escapeHtml(niveau.naam)}</p>
-      <div class="figure-wrap">${stickFigureSvg(oef.animatie)}</div>
       <p>${escapeHtml(u.kort)}</p>
-      <a class="btn btn-block" style="margin-bottom:6px;text-decoration:none" href="${oef.video || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(oef.naam + " oefening juiste uitvoering fysiotherapie"))}" target="_blank" rel="noopener">Bekijk uitlegvideo (YouTube, opent extern)</a>
-      <p class="fine" style="margin-top:0;margin-bottom:14px">De animatie hierboven is een geheugensteuntje, geen complete instructie. Bekijk bij een oefening die je nog nooit deed sowieso een video van een expert voordat je begint. Een specifieke video kan later offline of verwijderd zijn — zoek in dat geval opnieuw op "${escapeHtml(oef.naam)}" op YouTube.</p>
+      ${referentieLinks(oef)}
+      <p class="fine" style="margin-top:0;margin-bottom:14px">Bekijk bij een oefening die je nog nooit deed sowieso een video of foto van een expert voordat je begint. Een specifieke link kan later offline of verwijderd zijn — zoek in dat geval opnieuw op "${escapeHtml(oef.naam)}".</p>
       <details open>
         <summary>Uitvoering stap voor stap</summary>
         <ol>${u.uitvoering.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}</ol>
@@ -1823,6 +1822,14 @@ function renderInstellingen(){
       </div>
     </div>
     <div class="card">
+      <h3 style="margin-bottom:8px">Spotify-playlist</h3>
+      <p class="muted small">Link naar een playlist, getoond als knop op het Vandaag-scherm.</p>
+      <div class="field" style="margin-bottom:0">
+        <label for="set-spotify">Playlist-link</label>
+        <input type="url" id="set-spotify" value="${escapeHtml(i.spotifyUrl||"")}" placeholder="https://open.spotify.com/playlist/...">
+      </div>
+    </div>
+    <div class="card">
       <h3 style="margin-bottom:8px">Back-up</h3>
       <p class="muted small">Laatste export: ${i.laatsteExport ? fmtDatumKort(i.laatsteExport) : "nog niet gemaakt"}.</p>
       <button class="btn btn-block" data-action="ga-export">Export &amp; import</button>
@@ -1839,7 +1846,7 @@ function renderInstellingen(){
 }
 
 /* ===================== EXPORT & IMPORT (F7, punt 9) ===================== */
-const ANALYSE_PROMPT = `Hierbij de export van mijn workout-app (JSON). Analyseer mijn progressie en stel het volgende programmablok samen (4 tot 6 weken). Regels: houd de McGill Big 3 als vaste kern; feedback "te makkelijk" versnelt progressie, "te zwaar" vertraagt, oefeningen met vervangingsmarkering of herhaald "voelde niet lekker" vervang je door een alternatief binnen hetzelfde bewegingspatroon; houd rekening met de seizoensinstelling; ik train thuis zonder materiaal, adviseer alleen bij duidelijke meerwaarde een aanschaf (zoals een weerstandsband) en vraag dat eerst. Onderbouw je keuzes kort. Lever daarna het nieuwe blok als één JSON-codeblok met exact deze structuur: { "schemaVersion": 1, "programma": { ... } }, inclusief volledige Nederlandse uitlegteksten per oefening (kort, uitvoering, fouten, spieren, stoppen) en startNiveau per oefening. Nieuwe oefeningen krijgen "animatie": null; die voeg ik later toe.`;
+const ANALYSE_PROMPT = `Hierbij de export van mijn workout-app (JSON). Analyseer mijn progressie en stel het volgende programmablok samen (4 tot 6 weken). Regels: houd de McGill Big 3 als vaste kern; feedback "te makkelijk" versnelt progressie, "te zwaar" vertraagt, oefeningen met vervangingsmarkering of herhaald "voelde niet lekker" vervang je door een alternatief binnen hetzelfde bewegingspatroon; houd rekening met de seizoensinstelling; ik train thuis zonder materiaal, adviseer alleen bij duidelijke meerwaarde een aanschaf (zoals een weerstandsband) en vraag dat eerst. Onderbouw je keuzes kort. Lever daarna het nieuwe blok als één JSON-codeblok met exact deze structuur: { "schemaVersion": 1, "programma": { ... } }, inclusief volledige Nederlandse uitlegteksten per oefening (kort, uitvoering, fouten, spieren, stoppen) en startNiveau per oefening. Nieuwe oefeningen krijgen "video" en "afbeelding": null tenzij je een echte, geverifieerde YouTube-video en referentiepagina met foto kan linken die exact bij de oefening past (geen zoeklinks, geen gegokte URL's) — noem het anders expliciet zodat ik zelf een link kan aanleveren.`;
 function renderExport(){
   return `<div class="screen">
     ${state.programma.blokreviewGedaan ? `<div class="banner" style="background:var(--primary-dim);color:var(--primary)">Blok afgerond. Exporteer je data en gebruik de prompt hieronder om je volgende blok te laten samenstellen.</div>` : ""}
@@ -1981,10 +1988,12 @@ function onAction(e){
     case "sec-reset": secReset(); break;
     case "hold-start": holdStart(); break;
     case "rest-skip": stopSpeech(); clearTimers(); ui.flow.restTotal=0; ui.flow.restRemaining=0; advanceStep(); break;
+    case "toggle-pause": togglePause(); break;
     case "toggle-autorun": ui.flow.autoRun = !ui.flow.autoRun; render(); break;
     case "toggle-spraak": state.instellingen.spraak = !state.instellingen.spraak; if(!state.instellingen.spraak && "speechSynthesis" in window) speechSynthesis.cancel(); render(); break;
     case "auto-stop": stopAuto(); break;
     case "fb-set": ui.afsluit.feedback[el.dataset.oefening] = el.dataset.val; render(); break;
+    case "toggle-vervang": ui.afsluit.vervang[el.dataset.oefening] = !ui.afsluit.vervang[el.dataset.oefening]; render(); break;
     case "fb-confirm": confirmSession(); break;
     case "sugg": resolveSuggestie(el.dataset.id, el.dataset.actie); break;
     case "afsluiten-klaar": ui.afsluit = null; goto("vandaag"); break;
@@ -2076,6 +2085,7 @@ function wireBoundInputs(){
   const setAzureVoice = document.getElementById("set-azure-voice");
   if(setAzureVoice) setAzureVoice.addEventListener("change", ()=>{ state.instellingen.azureVoice = setAzureVoice.value; render(); });
   bindText("set-lengte", v=>state.instellingen.lengteCm = v?parseFloat(v):null);
+  bindText("set-spotify", v=>state.instellingen.spotifyUrl = v||null);
   if(ui.blokreview){
     document.querySelectorAll("[data-bind-br]").forEach(el=>{
       el.addEventListener("input", ()=>{ ui.blokreview.perOefening[el.dataset.bindBr].opmerking = el.value; });
@@ -2134,7 +2144,7 @@ function restoreFlowIfAny(){
     inputVal:null,
     autoRun: snap.autoRun!==false,
     autoTimer:null, autoPhase:null, autoStarted:false, autoRepsCompleted:0,
-    countdownTimer:null, countdownVal:0, pausedForDetail:false
+    countdownTimer:null, countdownVal:0, pausedForDetail:false, paused:false
   };
   // Zonder dit blijft het scherm-aan-houden uit na een herlaad middenin een workout — precies het
   // scenario waarvoor deze herstelfunctie bestaat (bijv. terug van een achtergrond-app of YouTube).
