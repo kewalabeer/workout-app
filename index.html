@@ -444,6 +444,21 @@ function loadState(){
         if(!o.video && bron.video) o.video = bron.video;
       });
     }
+    // Workoutschema's (rustSec, sets, superset) worden nergens door de gebruiker bewerkt, dus die
+    // synchroniseren we altijd met de ingebouwde WORKOUTS-catalogus i.p.v. de opgeslagen waarde te
+    // bewaren — anders blijft een oude rustSec (bv. 60s) hangen nadat de catalogus is aangepast.
+    if(parsed.programma && Array.isArray(parsed.programma.workouts)){
+      parsed.programma.workouts.forEach(w=>{
+        const bron = WORKOUTS.find(b=>b.id===w.id);
+        if(!bron || !Array.isArray(w.oefeningen)) return;
+        w.oefeningen.forEach((o,i)=>{
+          const bronOef = bron.oefeningen[i];
+          if(bronOef && bronOef.oefeningId===o.oefeningId){
+            o.rustSec = bronOef.rustSec; o.sets = bronOef.sets; o.superset = bronOef.superset;
+          }
+        });
+      });
+    }
     return parsed;
   }catch(e){ return defaultState(); }
 }
