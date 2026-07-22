@@ -907,7 +907,7 @@ function speakLocal(text, onDone){
     const u = new SpeechSynthesisUtterance(text);
     if(ttsVoice){ u.voice = ttsVoice; u.lang = ttsVoice.lang; }
     else { u.lang = "nl-NL"; }
-    u.rate = 1.15;
+    u.rate = 1.3;
     u.pitch = 1;
     if(onDone){ u.onend = onDone; u.onerror = onDone; }
     speechSynthesis.speak(u);
@@ -938,7 +938,7 @@ function speakAzure(text, onDone){
   const cacheKey = voice.value + "::" + text;
   const cached = azureCache.get(cacheKey);
   if(cached){ enqueueAzure(cached, text, onDone); return; }
-  const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'><prosody rate='+15%'>${escapeXml(text)}</prosody></voice></speak>`;
+  const ssml = `<speak version='1.0' xml:lang='nl-NL'><voice xml:lang='nl-NL' xml:gender='${voice.gender}' name='${voice.value}'><prosody rate='+30%'>${escapeXml(text)}</prosody></voice></speak>`;
   const controller = new AbortController();
   const timeout = setTimeout(()=>controller.abort(), 4000);
   fetch(`https://${i.azureRegion}.tts.speech.microsoft.com/cognitiveservices/v1`, {
@@ -1044,7 +1044,7 @@ function beginAnnounceAndCountdown(step){
 }
 // Elke tick toont en spreekt het HUIDIGE getal, en pas als de spraak voor dát getal écht is
 // afgerond (niet na een gegokte vaste tijd) gaat het verder naar het volgende getal of de echte
-// start. Een korte ondergrens (900ms) zorgt dat een getal ook zichtbaar blijft als spraak uitstaat
+// start. Een korte ondergrens (500ms) zorgt dat een getal ook zichtbaar blijft als spraak uitstaat
 // of razendsnel klaar is — anders zou "3, 2, 1" in een oogwenk voorbijflitsen.
 function countdownTick(step){
   const f = ui.flow;
@@ -1065,7 +1065,7 @@ function countdownTick(step){
     }
   };
   speak(String(val), proceed);
-  f.countdownTimer = setTimeout(proceed, 900);
+  f.countdownTimer = setTimeout(proceed, 500);
 }
 function beginStepAction(step){
   const f = ui.flow;
